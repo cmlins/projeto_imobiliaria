@@ -13,22 +13,21 @@ CREATE TABLE public.Endereco (
 	Rua VARCHAR(100),
 	Numero VARCHAR(10),
 	Andar VARCHAR(10),
-	Bloco VARCHAR(100),
+	Bloco VARCHAR(10),
 	Bairro VARCHAR(100),
-	Cep VARCHAR(100),
+	Cep VARCHAR(10),
 	Cidade VARCHAR(100),
-	Uf VARCHAR(100)
+	Uf VARCHAR(50)
 );
 
 CREATE TABLE public.Pessoa (
 	Id_pessoa SERIAL PRIMARY KEY,
 	Nome VARCHAR(100) NOT NULL,
-	Cpf VARCHAR(100) NOT NULL,
-	Data_nasc VARCHAR(100),
-	RG VARCHAR(100),
+	Cpf VARCHAR(11) NOT NULL,
+	Data_nasc DATE,
+	RG VARCHAR(15),
 	Profissao VARCHAR(100),
-	Estado_civil VARCHAR(100),
-	Rua VARCHAR(100)
+	Estado_civil VARCHAR(50)
 );
 
 CREATE TABLE public.Gastos_previos (
