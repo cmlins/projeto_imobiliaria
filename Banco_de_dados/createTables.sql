@@ -1,14 +1,14 @@
-CREATE TABLE public.Tipo (
+CREATE TABLE IF NOT EXISTS public.Tipo (
 	Id_tipo INT PRIMARY KEY,
 	Tipos VARCHAR(20)
 );
 
-CREATE TABLE public.Bancos (
+CREATE TABLE IF NOT EXISTS public.Bancos (
 	Id_banco Int PRIMARY KEY,
 	Nome_banco VARCHAR(100)
 );
 
-CREATE TABLE public.Endereco (
+CREATE TABLE IF NOT EXISTS public.Endereco (
 	Id_endereco SERIAL PRIMARY KEY,
 	Rua VARCHAR(100),
 	Numero VARCHAR(10),
@@ -20,7 +20,7 @@ CREATE TABLE public.Endereco (
 	Uf VARCHAR(50)
 );
 
-CREATE TABLE public.Pessoa (
+CREATE TABLE IF NOT EXISTS public.Pessoa (
 	Id_pessoa SERIAL PRIMARY KEY,
 	Nome VARCHAR(100) NOT NULL,
 	Cpf VARCHAR(11) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE public.Pessoa (
 	Estado_civil VARCHAR(50)
 );
 
-CREATE TABLE public.Gastos_previos (
+CREATE TABLE IF NOT EXISTS public.Gastos_previos (
 	Id_gastos SERIAL PRIMARY KEY,
 	Energia NUMERIC(5,2),
 	Agua NUMERIC(5,2),
@@ -38,7 +38,7 @@ CREATE TABLE public.Gastos_previos (
 	Propaganda NUMERIC(5,2)
 );
 
-CREATE TABLE public.Imovel (
+CREATE TABLE IF NOT EXISTS public.Imovel (
 	Id_imovel SERIAL PRIMARY KEY,
 	Id_endereco INT,
 	Id_tipo INT,
@@ -46,7 +46,7 @@ CREATE TABLE public.Imovel (
 	FOREIGN KEY (Id_tipo) REFERENCES Tipo(Id_tipo)
 );
 
-CREATE TABLE public.Proprietario (
+CREATE TABLE IF NOT EXISTS public.Proprietario (
 	Id_proprietário  SERIAL PRIMARY KEY,
 	Id_pessoa INT,
 	Id_imovel INT,
@@ -57,7 +57,7 @@ CREATE TABLE public.Proprietario (
 	FOREIGN KEY (id_gastos) REFERENCES Gastos_previos(id_gastos)
 );
 
-CREATE TABLE public.Pagamento (
+CREATE TABLE IF NOT EXISTS public.Pagamento (
 	Id_pagamento SERIAL PRIMARY KEY,
 	Vista BOOLEAN,
 	Id_banco INT,
@@ -66,7 +66,7 @@ CREATE TABLE public.Pagamento (
 	FOREIGN KEY (Id_banco) REFERENCES Bancos(Id_banco)	
 );
 
-CREATE TABLE public.Cliente (
+CREATE TABLE IF NOT EXISTS public.Cliente (
 	Id_cliente SERIAL PRIMARY KEY,
 	Id_endereco INT,
 	Id_pessoa INT,
