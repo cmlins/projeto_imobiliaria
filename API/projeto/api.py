@@ -69,5 +69,22 @@ def get():
         output.append(currEndereco)
     return jsonify(output)
 
+@app.route('/endereco', methods=['POST'])
+def post():
+    res = request.get_json()
+    endereco = Endereco(
+                    rua = res['rua'],
+                    numero = res['numero'],
+                    andar = res['andar'],
+                    bloco = res['bloco'],
+                    bairro = res['bairro'],
+                    cep = res['cep'],
+                    cidade = res['cidade'],
+                    uf = res['uf'],
+                    )
+    db.session.add(endereco)
+    db.session.commit()
+    return jsonify(res)
+
 if __name__ == '__main__':
     app.run(debug = True)
