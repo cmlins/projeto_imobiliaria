@@ -17,7 +17,7 @@ class Endereco(db.Model):
     __tablename__ = 'endereco'
     Id_endereco = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
     rua = db.Column(db.String)
-    rumero = db.Column(db.String)
+    numero = db.Column(db.String)
     andar = db.Column(db.String)
     bloco = db.Column(db.String)
     bairro = db.Column(db.String)
