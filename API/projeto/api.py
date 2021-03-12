@@ -46,45 +46,45 @@ model_end = app_.model('Endereco model', {
     'uf': fields.String(required=True, description='uf', help='Preenchimento obrigatório')
 })
 
-@app.route('/test', methods=['GET'])
-def test(): 
-    return {
-        'test':'teste'
-    }
+@end.route("/")
+class MainClass(Resource):
+    def index():
+        return {"test": "teste"}
 
-@app.route('/endereco', methods=['GET'])
-def get():
-    allEnderecos = Endereco.query.all()
-    output = []
-    for endereco in allEnderecos:
-        currEndereco = {}
-        currEndereco['rua'] = endereco.rua
-        currEndereco['numero'] = endereco.numero
-        currEndereco['andar'] = endereco.andar
-        currEndereco['bloco'] = endereco.bloco
-        currEndereco['bairro'] = endereco.bairro
-        currEndereco['cep'] = endereco.cep
-        currEndereco['cidade'] = endereco.cidade
-        currEndereco['uf'] = endereco.uf
-        output.append(currEndereco)
-    return jsonify(output)
+    # @app.route('/endereco', methods=['GET'])
+    def get(self):
+        allEnderecos = Endereco.query.all()
+        output = []
+        for endereco in allEnderecos:
+            currEndereco = {}
+            currEndereco['rua'] = endereco.rua
+            currEndereco['numero'] = endereco.numero
+            currEndereco['andar'] = endereco.andar
+            currEndereco['bloco'] = endereco.bloco
+            currEndereco['bairro'] = endereco.bairro
+            currEndereco['cep'] = endereco.cep
+            currEndereco['cidade'] = endereco.cidade
+            currEndereco['uf'] = endereco.uf
+            output.append(currEndereco)
+        return jsonify(output)
 
-@app.route('/endereco', methods=['POST'])
-def post():
-    res = request.get_json()
-    endereco = Endereco(
-                    rua = res['rua'],
-                    numero = res['numero'],
-                    andar = res['andar'],
-                    bloco = res['bloco'],
-                    bairro = res['bairro'],
-                    cep = res['cep'],
-                    cidade = res['cidade'],
-                    uf = res['uf'],
-                    )
-    db.session.add(endereco)
-    db.session.commit()
-    return jsonify(res)
+    # @app.route('/endereco', methods=['POST'])
+    @app_.expect(model_end)
+    def post(self):
+        res = request.get_json()
+        endereco = Endereco(
+                        rua = res['rua'],
+                        numero = res['numero'],
+                        andar = res['andar'],
+                        bloco = res['bloco'],
+                        bairro = res['bairro'],
+                        cep = res['cep'],
+                        cidade = res['cidade'],
+                        uf = res['uf'],
+                        )
+        db.session.add(endereco)
+        db.session.commit()
+        return jsonify(res)
 
 if __name__ == '__main__':
     app.run(debug = True)
