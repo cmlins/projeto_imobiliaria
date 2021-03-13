@@ -36,6 +36,7 @@ class Endereco(db.Model):
         self.uf = uf
 
 model_end = app_.model('Endereco model', {
+    'Id_endereco': fields.Integer(required=True, description='id', help='Preenchimento obrigatório'),
     'rua': fields.String(required=True, description='rua', help='Preenchimento obrigatório'),
     'numero': fields.String(required=True, description='numero', help='Preenchimento obrigatório'),
     'andar': fields.String(required=True, description='andar', help='Preenchimento obrigatório'),
@@ -45,6 +46,65 @@ model_end = app_.model('Endereco model', {
     'cidade': fields.String(required=True, description='cidade', help='Preenchimento obrigatório'),
     'uf': fields.String(required=True, description='uf', help='Preenchimento obrigatório')
 })
+
+@end.route("/<int:id>")
+class MainClass(Resource):
+
+    # https://github.com/noirbizarre/flask-restplus/blob/master/examples/todo.py
+    # https://betterprogramming.pub/building-restful-apis-with-flask-and-sqlalchemy-part-1-b192c5846ddd
+    # https://flask-restplus.readthedocs.io/en/stable/example.html
+        
+    # @app.route('/endereco/<id>/', methods=['PUT'])
+    @app_.expect(model_end)
+    def put(self, id):
+        res = request.get_json()
+        print(f'response: {res}')
+        print('rua' in res)
+        print(res['rua'])
+        # end = Endereco.query.filter_by(Id_endereco=id).first_or_404
+        # end.rua = res.get('rua', end.rua)
+        # end.numero = res.get('numero', end.numero)
+        # end.andar = res.get('andar', end.andar)
+        # end.bloco = res.get('bloco', end.bloco)
+        # end.bairro = res.get('bairro', end.bairro)
+        # end.cep = res.get('cep', end.cep)
+        # end.cidade = res.get('cidade', end.cidade)
+        # end.uf = res.get('uf', end.uf)
+        # db.session.commit()
+
+        end = Endereco.query.filter_by(Id_endereco=id).first_or_404
+        # print(f'end_rua: {end.rua}')
+        print(f'end: {end}')
+        end.rua = res['rua']
+        end.numero = res['numero']
+        end.andar = res['andar']
+        end.bloco = res['bloco']
+        end.bairro = res['bairro']
+        end.cep = res['cep']
+        end.cidade = res['cidade']
+        end.uf = res['uf']
+        db.session.commit()
+
+        return {
+            'rua': end.rua,
+            'numero': end.numero,
+            'andar': end.andar,
+            'bloco': end.bloco,
+            'bairro': end.bairro,
+            'cep': end.cep,
+            'cidade': end.cidade,
+            'uf': end.uf
+        }
+
+    def delete(self, id):
+        end = Endereco.query.get_or_404(id)
+        try:
+            db.session.delete(end)
+            db.session.commit()
+            return(f'linha {id} excluida')
+        except:
+            return "Dado não deletado"
+
 
 @end.route("/")
 class MainClass(Resource):
@@ -57,6 +117,7 @@ class MainClass(Resource):
         output = []
         for endereco in allEnderecos:
             currEndereco = {}
+            currEndereco['Id_endereco'] = endereco.Id_endereco
             currEndereco['rua'] = endereco.rua
             currEndereco['numero'] = endereco.numero
             currEndereco['andar'] = endereco.andar
