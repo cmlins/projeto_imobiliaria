@@ -1,14 +1,14 @@
-CREATE TABLE IF NOT EXISTS public.Tipo (
+CREATE TABLE IF NOT EXISTS Tipo (
 	Id_tipo INT PRIMARY KEY,
 	Tipos VARCHAR(20)
 );
 
-CREATE TABLE IF NOT EXISTS public.Bancos (
+CREATE TABLE IF NOT EXISTS Bancos (
 	Id_banco Int PRIMARY KEY,
 	Nome_banco VARCHAR(100)
 );
 
-CREATE TABLE IF NOT EXISTS public.Endereco (
+CREATE TABLE IF NOT EXISTS Endereco (
 	Id_endereco SERIAL PRIMARY KEY,
 	Rua VARCHAR(100),
 	Numero VARCHAR(10),
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS public.Endereco (
 	Uf VARCHAR(50)
 );
 
-CREATE TABLE IF NOT EXISTS public.Pessoa (
+CREATE TABLE IF NOT EXISTS Pessoa (
 	Id_pessoa SERIAL PRIMARY KEY,
 	Nome VARCHAR(100) NOT NULL,
 	Cpf VARCHAR(11) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS public.Pessoa (
 	Estado_civil VARCHAR(50)
 );
 
-CREATE TABLE IF NOT EXISTS public.Gastos_previos (
+CREATE TABLE IF NOT EXISTS Gastos_previos (
 	Id_gastos SERIAL PRIMARY KEY,
 	Energia NUMERIC(5,2),
 	Agua NUMERIC(5,2),
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS public.Gastos_previos (
 	Propaganda NUMERIC(5,2)
 );
 
-CREATE TABLE IF NOT EXISTS public.Imovel (
+CREATE TABLE IF NOT EXISTS Imovel (
 	Id_imovel SERIAL PRIMARY KEY,
 	Id_endereco INT,
 	Id_tipo INT,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS public.Imovel (
 	FOREIGN KEY (Id_tipo) REFERENCES Tipo(Id_tipo)
 );
 
-CREATE TABLE IF NOT EXISTS public.Proprietario (
+CREATE TABLE IF NOT EXISTS Proprietario (
 	Id_proprietário  SERIAL PRIMARY KEY,
 	Id_pessoa INT,
 	Id_imovel INT,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS public.Proprietario (
 	FOREIGN KEY (id_gastos) REFERENCES Gastos_previos(id_gastos)
 );
 
-CREATE TABLE IF NOT EXISTS public.Pagamento (
+CREATE TABLE IF NOT EXISTS Pagamento (
 	Id_pagamento SERIAL PRIMARY KEY,
 	Vista BOOLEAN,
 	Id_banco INT,
@@ -66,16 +66,14 @@ CREATE TABLE IF NOT EXISTS public.Pagamento (
 	FOREIGN KEY (Id_banco) REFERENCES Bancos(Id_banco)	
 );
 
-CREATE TABLE IF NOT EXISTS public.Cliente (
+CREATE TABLE IF NOT EXISTS Cliente (
 	Id_cliente SERIAL PRIMARY KEY,
-	Id_endereco INT,
 	Id_pessoa INT,
-	Id_pagamento INT,
-	Id_imovel INT,
+	Id_endereco INT,
+	Id_pagamento INT,	
 	FOREIGN KEY (Id_endereco) REFERENCES Endereco(Id_endereco),
 	FOREIGN KEY (Id_pessoa) REFERENCES Pessoa(Id_pessoa),
 	FOREIGN KEY (Id_pagamento) REFERENCES Pagamento(Id_pagamento),
-	FOREIGN KEY (Id_imovel) REFERENCES Imovel(Id_imovel)	
 );
 
 

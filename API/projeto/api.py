@@ -11,7 +11,7 @@ app.debug = True
 app.secret_key = "alquimia"
 db = SQLAlchemy(app)
 
-end = app_.namespace('Endereco', descrition='Endereco')
+end = app_.namespace('Endereço', descrition='Endereco')
 
 class Endereco(db.Model):   
     __tablename__ = 'endereco'
@@ -58,23 +58,8 @@ class MainClass(Resource):
     @app_.expect(model_end)
     def put(self, id):
         res = request.get_json()
-        print(f'response: {res}')
-        print('rua' in res)
-        print(res['rua'])
-        # end = Endereco.query.filter_by(Id_endereco=id).first_or_404
-        # end.rua = res.get('rua', end.rua)
-        # end.numero = res.get('numero', end.numero)
-        # end.andar = res.get('andar', end.andar)
-        # end.bloco = res.get('bloco', end.bloco)
-        # end.bairro = res.get('bairro', end.bairro)
-        # end.cep = res.get('cep', end.cep)
-        # end.cidade = res.get('cidade', end.cidade)
-        # end.uf = res.get('uf', end.uf)
-        # db.session.commit()
 
-        end = Endereco.query.filter_by(Id_endereco=id).first_or_404
-        # print(f'end_rua: {end.rua}')
-        print(f'end: {end}')
+        end = Endereco.query.get(id)
         end.rua = res['rua']
         end.numero = res['numero']
         end.andar = res['andar']
@@ -105,6 +90,18 @@ class MainClass(Resource):
         except:
             return "Dado não deletado"
 
+    def get(self, id):
+        end = Endereco.query.get(id)
+        return {
+            'rua': end.rua,
+            'numero': end.numero,
+            'andar': end.andar,
+            'bloco': end.bloco,
+            'bairro': end.bairro,
+            'cep': end.cep,
+            'cidade': end.cidade,
+            'uf': end.uf
+        }
 
 @end.route("/")
 class MainClass(Resource):
