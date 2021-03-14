@@ -537,5 +537,18 @@ class MainClass(Resource):
 
         print(res)
 
+    def get(self):
+        allTransacoes = Transacao.query.all()
+        output = []
+        for transacao in allTransacoes:
+            currTransacao = {}
+            currTransacao['id_comprador'] = transacao.id_comprador
+            currTransacao['id_proprietario'] = transacao.id_proprietario
+            currTransacao['id_imovel'] = transacao.id_imovel
+            
+            output.append(currTransacao)
+
+        return jsonify(output)
+
 if __name__ == '__main__':
     app.run(debug = True)
