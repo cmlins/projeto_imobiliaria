@@ -19,9 +19,11 @@ db = SQLAlchemy(app)
 
 ########### ÁREAS DO SWAGGER ###########
 
-cliente = app_.namespace('Cliente', descrition='Cliente')
+cliente = app_.namespace('Clientes', descrition='Cliente')
 transacoes = app_.namespace('Transações', descrition='Transações')
 imoveis = app_.namespace('Imóveis', descrition='Imóveis')
+pessoas = app_.namespace('Pessoas', descrition='Dados pessoais dos clientes')
+enderecos = app_.namespace('Endereços', descrition='Imóveis')
 
 ########### CLASSES PARA A CRIAÇÃO DAS TABELAS ###########
 
@@ -109,6 +111,16 @@ class Pagamento(db.Model):
         self.entrada = entrada
         self.n_parcelas = n_parcelas
 
+class Cliente(db.Model):   
+    __tablename__ = 'cliente'
+    id_cliente = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
+    id_pessoa = db.Column(db.Integer, db.ForeignKey('pessoa.id_pessoa'), nullable=False)
+    id_endereco = db.Column(db.Integer, db.ForeignKey('endereco.id_endereco'), nullable=False)
+    
+    def __init__(self, id_pessoa, id_endereco):
+        self.id_pessoa = id_pessoa
+        self.id_endereco = id_endereco
+
 class Imovel(db.Model):   
     __tablename__ = 'imovel'
     id_imovel = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
@@ -116,24 +128,14 @@ class Imovel(db.Model):
     id_tipo = db.Column(db.Integer, db.ForeignKey('tipo.id_tipo'), nullable=False)
     id_gastos = db.Column(db.Integer, db.ForeignKey('gastos.id_gastos'), nullable=False)
     idade = db.Column(db.Integer, nullable=False)
+    id_cliente = db.Column(db.Integer, db.ForeignKey('cliente.id_cliente'), nullable=False)
 
-    def __init__(self, id_endereco, id_tipo, id_gastos, idade):
+    def __init__(self, id_endereco, id_tipo, id_gastos, idade, id_cliente):
         self.id_endereco = id_endereco
         self.id_tipo = id_tipo
         self.id_gastos = id_gastos
         self.idade = idade
-
-class Cliente(db.Model):   
-    __tablename__ = 'cliente'
-    id_cliente = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
-    id_pessoa = db.Column(db.Integer, db.ForeignKey('pessoa.id_pessoa'), nullable=False)
-    id_endereco = db.Column(db.Integer, db.ForeignKey('endereco.id_endereco'), nullable=False)
-    id_imovel = db.Column(db.Integer, db.ForeignKey('imovel.id_imovel'))
-    
-    def __init__(self, id_pessoa, id_endereco, id_imovel):
-        self.id_pessoa = id_pessoa
-        self.id_endereco = id_endereco
-        self.id_imovel = id_imovel
+        self.id_cliente = id_cliente
 
 class Transacao(db.Model):
     __tablename__ = 'transacao'
@@ -187,19 +189,19 @@ model_pagamento = app_.model('Pagamento model', {
     'n_parcelas': fields.Integer(required=True, description='n_parcelas', help='Preenchimento obrigatório')
 })
 
+model_cliente = app_.model('Cliente model', {
+    'id': fields.Integer(required=True, description='id_proprietário', help='Preenchimento obrigatório'),
+    'pessoa': fields.Nested(model_pessoa),
+    'endereco': fields.Nested(model_end)
+})
+
 model_imovel = app_.model('Imovel model', {
     'id': fields.Integer(required=True, description='id_imovel', help='Preenchimento obrigatório'),
     'endereco': fields.Nested(model_end),
     'tipo': fields.Integer(required=True, description='id_tipo', help='Preenchimento obrigatório'),
     'gastos': fields.Nested(model_gastos),
-    'idade': fields.Integer(required=True, description='tempo_propriedade', help='Preenchimento obrigatório')
-})
-
-model_cliente = app_.model('Cliente model', {
-    'id': fields.Integer(required=True, description='id_proprietário', help='Preenchimento obrigatório'),
-    'pessoa': fields.Nested(model_pessoa),
-    'endereco': fields.Nested(model_end),
-    'imovel': fields.List(fields.Nested(model_imovel))
+    'idade': fields.Integer(required=True, description='tempo_propriedade', help='Preenchimento obrigatório'),
+    'proprietario': fields.Nested(model_cliente)
 })
 
 model_transacoes = app_.model('Transacoes model', {
@@ -211,21 +213,229 @@ model_transacoes = app_.model('Transacoes model', {
 
 ########### IMPLEMENTAÇÃO DAS ROTAS ###########
 
+@pessoas.route("/")
+class MainClass(Resource):
+    def get(self):
+        allPessoas = Pessoa.query.all()
+        output = []
+        for pessoa in allPessoas:
+            currPessoa = {}
+            currPessoa['id_pessoa'] = pessoa.id_pessoa
+            currPessoa['nome'] = pessoa.nome
+            currPessoa['cpf'] = pessoa.cpf
+            currPessoa['data_nasc'] = pessoa.data_nasc
+            currPessoa['rg'] = pessoa.rg
+            currPessoa['profissao'] = pessoa.profissao
+            currPessoa['estado_civil'] = pessoa.estado_civil
+            output.append(currPessoa)
+        return jsonify(output)
+
+@pessoas.route("/<int:id>")
+class MainClass(Resource):
+
+    @app_.expect(model_pessoa)
+    def put(self, id):
+        res = request.get_json()
+
+        pes = Pessoa.query.get(id)
+        pes.cpf = res['cpf']
+        pes.data_nasc = res['data_nasc']
+        pes.estado_civil = res['estado_civil']
+        pes.nome = res['nome']
+        pes.profissao = res['profissao']
+        pes.rg = res['rg']
+        db.session.commit()
+
+        return {
+            'cpf': pes.cpf,
+            'data_nasc': pes.numero,
+            'estado_civil': pes.estado_civil,
+            'nome': pes.nome,
+            'profissao': pes.profissao,
+            'rg': pes.rg,
+        }
+
+    def get(self, id):
+        pes = Endereco.query.get(id)
+        return {
+            'rua': pes.rua,
+            'numero': pes.numero,
+            'andar': pes.andar,
+            'bloco': pes.bloco,
+            'bairro': pes.bairro,
+            'cep': pes.cep,
+            'cidade': pes.cidade,
+            'uf': pes.uf
+        }
+
+
+########### ROTAS ENDEREÇO ###########
+
+@enderecos.route("/<int:id>")
+class MainClass(Resource):
+    @app_.expect(model_end)
+    def put(self, id):
+        res = request.get_json()
+
+        end = Endereco.query.get(id)
+        end.rua = res['rua']
+        end.numero = res['numero']
+        end.andar = res['andar']
+        end.bloco = res['bloco']
+        end.bairro = res['bairro']
+        end.cep = res['cep']
+        end.cidade = res['cidade']
+        end.uf = res['uf']
+        db.session.commit()
+
+        return {
+            'rua': end.rua,
+            'numero': end.numero,
+            'andar': end.andar,
+            'bloco': end.bloco,
+            'bairro': end.bairro,
+            'cep': end.cep,
+            'cidade': end.cidade,
+            'uf': end.uf
+        }
+
+    def get(self, id):
+        end = Endereco.query.get(id)
+        return {
+            'rua': end.rua,
+            'numero': end.numero,
+            'andar': end.andar,
+            'bloco': end.bloco,
+            'bairro': end.bairro,
+            'cep': end.cep,
+            'cidade': end.cidade,
+            'uf': end.uf
+        }
+
+@enderecos.route("/")
+class MainClass(Resource):
+    def get(self):
+        allEnderecos = Endereco.query.all()
+        output = []
+        for endereco in allEnderecos:
+            currEndereco = {}
+            currEndereco['id_endereco'] = endereco.id_endereco
+            currEndereco['rua'] = endereco.rua
+            currEndereco['numero'] = endereco.numero
+            currEndereco['andar'] = endereco.andar
+            currEndereco['bloco'] = endereco.bloco
+            currEndereco['bairro'] = endereco.bairro
+            currEndereco['cep'] = endereco.cep
+            currEndereco['cidade'] = endereco.cidade
+            currEndereco['uf'] = endereco.uf
+            output.append(currEndereco)
+        return jsonify(output)
+
+########### ROTAS IMOVEL ###########
+
 @imoveis.route("/")
 class MainClass(Resource):
     @app_.expect(model_imovel)
     def post(self):
         res = request.get_json()
+
+        rua_imovel = res['endereco']['rua']
+        numero_imovel = res['endereco']['numero']
+        andar_imovel = res['endereco']['andar']
+        bloco_imovel = res['endereco']['bloco']
+        bairro_imovel = res['endereco']['bairro']
+        cep_imovel = res['endereco']['cep']
+        cidade_imovel = res['endereco']['cidade']
+        uf_imovel = res['endereco']['uf']
+
+        energia = res['gastos']['energia']
+        agua = res['gastos']['agua']
+        condominio = res['gastos']['condominio']
+        propaganda = res['gastos']['propaganda']
+
+        tipo = res['tipo']
+        idade = res['idade']
+
+        # proprietario
+        nome = res['proprietario']['pessoa']['nome']
+        cpf = res['proprietario']['pessoa']['cpf']
+        data_nasc = res['proprietario']['pessoa']['data_nasc']
+        rg = res['proprietario']['pessoa']['rg']
+        profissao = res['proprietario']['pessoa']['profissao']
+        estado_civil = res['proprietario']['pessoa']['estado_civil']
+
+        rua_cliente = res['proprietario']['endereco']['rua']
+        numero_cliente = res['proprietario']['endereco']['numero']
+        andar_cliente = res['proprietario']['endereco']['andar']
+        bloco_cliente = res['proprietario']['endereco']['bloco']
+        bairro_cliente = res['proprietario']['endereco']['bairro']
+        cep_cliente = res['proprietario']['endereco']['cep']
+        cidade_cliente = res['proprietario']['endereco']['cidade']
+        uf_cliente = res['proprietario']['endereco']['uf']        
+
+        pessoa = Pessoa(nome, cpf, data_nasc, rg, profissao, estado_civil)
+        db.session.add(pessoa)        
+        db.session.commit()
+
+        endereco_cliente = Endereco(rua_cliente, numero_cliente, andar_cliente, bloco_cliente, bairro_cliente, cep_cliente, cidade_cliente, uf_cliente)
+        db.session.add(endereco_cliente)        
+        db.session.commit()        
+
+        cliente = Cliente(pessoa.id_pessoa, endereco_cliente.id_endereco)
+        db.session.add(cliente)        
+        db.session.commit()
+
+        endereco_imovel = Endereco(rua_imovel, numero_imovel, andar_imovel, bloco_imovel, bairro_imovel, cep_imovel, cidade_imovel, uf_imovel)
+        db.session.add(endereco_imovel)        
+        db.session.commit()
+
+        gastos = Gastos(energia, agua, condominio, propaganda)
+        db.session.add(gastos)        
+        db.session.commit()
+
+        imovel = Imovel(endereco_imovel.id_endereco, tipo, gastos.id_gastos, idade, cliente.id_cliente)
+        db.session.add(imovel)        
+        db.session.commit()
+
         print(res)
 
+    def get(self):
+        allImoveis = Imovel.query.all()
+        output = []
+        for imovel in allImoveis:
+            currImovel = {}
+            currImovel['id_imovel'] = imovel.id_imovel
+            currImovel['id_endereco'] = imovel.id_endereco
+            currImovel['id_tipo'] = imovel.id_tipo
+            currImovel['id_gastos'] = imovel.id_gastos
+            currImovel['id_cliente'] = imovel.id_cliente
+            currImovel['idade'] = imovel.idade
+            output.append(currImovel)
+
+        return jsonify(output)
+
+@imoveis.route("/<int:id>")
+class MainClass(Resource):
+    def delete(self, id):
+        imo = Imovel.query.get_or_404(id)
+        end = Endereco.query.get_or_404(imo.id_endereco)
+        gas = Gastos.query.get_or_404(imo.id_gastos)
+        try:
+            db.session.delete(gas)
+            db.session.delete(end)
+            db.session.delete(imo)
+            db.session.commit()
+            return(f'Imovel {id} excluido')
+        except:
+            return "Imovel não deletado"
+
+########### ROTAS CLIENTE ###########
 @cliente.route("/")
 class MainClass(Resource):
     @app_.expect(model_cliente)
     def post(self):
         res = request.get_json()
-
-        posicao = len(res['imovel']) - 1
-        
+       
         nome = res['pessoa']['nome']
         cpf = res['pessoa']['cpf']
         data_nasc = res['pessoa']['data_nasc']
@@ -240,24 +450,7 @@ class MainClass(Resource):
         bairro_cliente = res['endereco']['bairro']
         cep_cliente = res['endereco']['cep']
         cidade_cliente = res['endereco']['cidade']
-        uf_cliente = res['endereco']['uf']
-
-        rua_imovel = res['imovel'][posicao]['endereco']['rua']
-        numero_imovel = res['imovel'][posicao]['endereco']['numero']
-        andar_imovel = res['imovel'][posicao]['endereco']['andar']
-        bloco_imovel = res['imovel'][posicao]['endereco']['bloco']
-        bairro_imovel = res['imovel'][posicao]['endereco']['bairro']
-        cep_imovel = res['imovel'][posicao]['endereco']['cep']
-        cidade_imovel = res['imovel'][posicao]['endereco']['cidade']
-        uf_imovel = res['imovel'][posicao]['endereco']['uf']
-
-        energia = res['imovel'][posicao]['gastos']['energia']
-        agua = res['imovel'][posicao]['gastos']['agua']
-        condominio = res['imovel'][posicao]['gastos']['condominio']
-        propaganda = res['imovel'][posicao]['gastos']['propaganda']
-
-        tipo = res['imovel'][posicao]['tipo']
-        idade = res['imovel'][posicao]['idade']
+        uf_cliente = res['endereco']['uf']        
 
         pessoa = Pessoa(nome, cpf, data_nasc, rg, profissao, estado_civil)
         db.session.add(pessoa)        
@@ -265,21 +458,9 @@ class MainClass(Resource):
 
         endereco_cliente = Endereco(rua_cliente, numero_cliente, andar_cliente, bloco_cliente, bairro_cliente, cep_cliente, cidade_cliente, uf_cliente)
         db.session.add(endereco_cliente)        
-        db.session.commit()
+        db.session.commit()        
 
-        endereco_imovel = Endereco(rua_imovel, numero_imovel, andar_imovel, bloco_imovel, bairro_imovel, cep_imovel, cidade_imovel, uf_imovel)
-        db.session.add(endereco_imovel)        
-        db.session.commit()
-
-        gastos = Gastos(energia, agua, condominio, propaganda)
-        db.session.add(gastos)        
-        db.session.commit()
-
-        imovel = Imovel(endereco_imovel.id_endereco, tipo, gastos.id_gastos, idade)
-        db.session.add(imovel)        
-        db.session.commit()
-
-        cliente = Cliente(pessoa.id_pessoa, endereco_cliente.id_endereco, imovel.id_imovel)
+        cliente = Cliente(pessoa.id_pessoa, endereco_cliente.id_endereco)
         db.session.add(cliente)        
         db.session.commit()
 
@@ -289,48 +470,39 @@ class MainClass(Resource):
         allClientes = Cliente.query.all()
         output = []
         for cliente in allClientes:
-            posicao = len(currCliente['imovel']) - 1
             currCliente = {}
-
-            currCliente['pessoa']['nome'] = pessoa.nome
-            currCliente['pessoa']['cpf'] = pessoa.cpf
-            currCliente['pessoa']['data_nasc'] = pessoa.data_nasc
-            currCliente['pessoa']['rg'] = pessoa.rg
-            currCliente['pessoa']['profissao'] = pessoa.profissao
-            currCliente['pessoa']['estado_civil'] = pessoa.estado_civil
-
-            currCliente['endereco']['rua'] = endereco.rua_cliente
-            currCliente['endereco']['numero'] = endereco.numero_cliente
-            currCliente['endereco']['andar'] = endereco.andar_cliente
-            currCliente['endereco']['bloco'] = endereco.bloco_cliente
-            currCliente['endereco']['bairro'] = endereco.bairro_cliente
-            currCliente['endereco']['cep'] = endereco.cep_cliente
-            currCliente['endereco']['cidade'] = endereco.cidade_cliente
-            currCliente['endereco']['uf'] = endereco.uf_cliente
-
-            currCliente['imovel'][posicao]['endereco']['rua'] = imovel.posicao.endereco.rua_imovel
-            currCliente['imovel'][posicao]['endereco']['numero'] = imovel.posicao.endereco.numero_imovel
-            currCliente['imovel'][posicao]['endereco']['andar'] = imovel.posicao.endereco.andar_imovel
-            currCliente['imovel'][posicao]['endereco']['bloco'] = imovel.posicao.endereco.bloco_imovel
-            currCliente['imovel'][posicao]['endereco']['bairro'] = imovel.posicao.endereco.bairro_imovel
-            currCliente['imovel'][posicao]['endereco']['cep'] = imovel.posicao.endereco.cep_imovel
-            currCliente['imovel'][posicao]['endereco']['cidade'] = imovel.posicao.endereco.cidade_imovel
-            currCliente['imovel'][posicao]['endereco']['uf'] = imovel.posicao.endereco.uf_imovel
-
-            currCliente['imovel'][posicao]['gastos']['energia'] = imovel.posicao.gastos.energia
-            currCliente['imovel'][posicao]['gastos']['agua'] = imovel.posicao.gastos.agua
-            currCliente['imovel'][posicao]['gastos']['condominio'] = imovel.posicao.gastos.condominio
-            currCliente['imovel'][posicao]['gastos']['propaganda'] = imovel.posicao.gastos.propaganda
-
-            currCliente['imovel'][posicao]['tipo'] = imovel.posicao.tipo
-            currCliente['imovel'][posicao]['idade'] = imovel.posicao.idade
-
+            currCliente['id_cliente'] = cliente.id_cliente
+            currCliente['id_pessoa'] = cliente.id_pessoa
+            currCliente['id_endereco'] = cliente.id_endereco
             output.append(currCliente)
 
-        return jsonify(output)
-        
+        return jsonify(output)        
 
+@cliente.route("/<int:id>")
+class MainClass(Resource):
+    
+    def delete(self, id):
+        cli = Cliente.query.get_or_404(id)
+        pes = Pessoa.query.get_or_404(cli.id_pessoa)
+        end = Endereco.query.get_or_404(cli.id_endereco)
+        try:
+            db.session.delete(cli)
+            db.session.delete(pes)
+            db.session.delete(end)
+            db.session.commit()
+            return(f'Cliente {id} excluido')
+        except:
+            return "Cliente não deletado"
 
+    def get(self, id):
+        cli = Cliente.query.get(id)
+        return {
+            'id_cliente': cliente.id_cliente,
+            'id_pessoa': cliente.id_pessoa,
+            'id_endereco': cliente.id_endereco,
+        }
+
+########### ROTAS TRANSAÇÕES ###########
 @transacoes.route("/")
 class MainClass(Resource):
     @app_.expect(model_transacoes)
