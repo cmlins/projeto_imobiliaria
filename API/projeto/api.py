@@ -101,7 +101,7 @@ class Pagamento(db.Model):
     __tablename__ = 'pagamento'
     id_pagamento = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
     vista = db.Column(db.Integer)
-    id_banco = db.Column(db.Integer, db.ForeignKey('banco.id_banco'), nullable=False)
+    id_banco = db.Column(db.Integer, db.ForeignKey('banco.id_banco'))
     entrada = db.Column(db.Integer)
     n_parcelas = db.Column(db.Integer)
 
@@ -143,11 +143,13 @@ class Transacao(db.Model):
     id_comprador = db.Column(db.Integer, db.ForeignKey('pessoa.id_pessoa'), nullable=False)
     id_proprietario = db.Column(db.Integer, db.ForeignKey('pessoa.id_pessoa'), nullable=False)
     id_pagamento = db.Column(db.Integer, db.ForeignKey('pagamento.id_pagamento'), nullable=False)
+    id_imovel = db.Column(db.Integer, db.ForeignKey('imovel.id_imovel'), nullable=False)
 
-    def __init__(self, id_comprador, id_proprietario, id_pagamento):
+    def __init__(self, id_imovel, id_comprador, id_proprietario, id_pagamento):
         self.id_comprador = id_comprador
-        self.id_proprietario = id_endereco
+        self.id_proprietario = id_proprietario
         self.id_pagamento = id_pagamento
+        self.id_imovel = id_imovel
 
 ########### MODELOS PARA O SWAGGER ###########
 
@@ -183,7 +185,7 @@ model_gastos = app_.model('Gastos model', {
 
 model_pagamento = app_.model('Pagamento model', {
     'id_pagamento': fields.Integer(required=True, description='id_pagamento', help='Preenchimento obrigatório'),
-    'vista': fields.Boolean(required=True, description='vista', help='Preenchimento obrigatório'),
+    'vista': fields.Integer(required=True, description='vista', help='Preenchimento obrigatório'),
     'id_banco': fields.Integer(required=True, description='id_banco', help='Preenchimento obrigatório'),
     'entrada': fields.Integer(required=True, description='entrada', help='Preenchimento obrigatório'),
     'n_parcelas': fields.Integer(required=True, description='n_parcelas', help='Preenchimento obrigatório')
@@ -205,9 +207,9 @@ model_imovel = app_.model('Imovel model', {
 })
 
 model_transacoes = app_.model('Transacoes model', {
-    'comprador': fields.Integer(required=True, description='id_tipo', help='Preenchimento obrigatório'),
-    'proprietario': fields.Integer(required=True, description='id_tipo', help='Preenchimento obrigatório'),
-    'imovel': fields.Integer(required=True, description='id_tipo', help='Preenchimento obrigatório'),
+    'id_comprador': fields.Integer(required=True, description='id_tipo', help='Preenchimento obrigatório'),
+    'id_proprietario': fields.Integer(required=True, description='id_tipo', help='Preenchimento obrigatório'),
+    'id_imovel': fields.Integer(required=True, description='id_tipo', help='Preenchimento obrigatório'),
     'pagamento': fields.Nested(model_pagamento)
 })
 
@@ -430,6 +432,7 @@ class MainClass(Resource):
             return "Imovel não deletado"
 
 ########### ROTAS CLIENTE ###########
+
 @cliente.route("/")
 class MainClass(Resource):
     @app_.expect(model_cliente)
@@ -503,11 +506,34 @@ class MainClass(Resource):
         }
 
 ########### ROTAS TRANSAÇÕES ###########
+
 @transacoes.route("/")
 class MainClass(Resource):
     @app_.expect(model_transacoes)
     def post(self):
         res = request.get_json()
+        print(res)
+        comprador = res['id_comprador']
+        proprietario = res['id_proprietario']
+        imovel = res['id_imovel']
+
+        a_vista = res['pagamento']['vista']
+        id_banco = res['pagamento']['id_banco']
+        entrada = res['pagamento']['entrada']
+        n_parcelas = res['pagamento']['n_parcelas']
+
+        pagamento = Pagamento(a_vista, id_banco, entrada, n_parcelas)
+        db.session.add(pagamento)
+        db.session.commit()
+
+        transacao = Transacao(imovel, comprador, proprietario, pagamento.id_pagamento)
+        db.session.add(transacao)
+        db.session.commit()
+
+        imovel = Imovel.query.get_or_404(imovel)
+        imovel.id_cliente = transacao.id_comprador
+        db.session.commit()
+
 
         print(res)
 
