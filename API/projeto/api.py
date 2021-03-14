@@ -286,9 +286,49 @@ class MainClass(Resource):
         return jsonify(res)
 
     def get(self):
-        allClientes = Endereco.query.all()
+        allClientes = Cliente.query.all()
         output = []
+        for cliente in allClientes:
+            posicao = len(currCliente['imovel']) - 1
+            currCliente = {}
+
+            currCliente['pessoa']['nome'] = pessoa.nome
+            currCliente['pessoa']['cpf'] = pessoa.cpf
+            currCliente['pessoa']['data_nasc'] = pessoa.data_nasc
+            currCliente['pessoa']['rg'] = pessoa.rg
+            currCliente['pessoa']['profissao'] = pessoa.profissao
+            currCliente['pessoa']['estado_civil'] = pessoa.estado_civil
+
+            currCliente['endereco']['rua'] = endereco.rua_cliente
+            currCliente['endereco']['numero'] = endereco.numero_cliente
+            currCliente['endereco']['andar'] = endereco.andar_cliente
+            currCliente['endereco']['bloco'] = endereco.bloco_cliente
+            currCliente['endereco']['bairro'] = endereco.bairro_cliente
+            currCliente['endereco']['cep'] = endereco.cep_cliente
+            currCliente['endereco']['cidade'] = endereco.cidade_cliente
+            currCliente['endereco']['uf'] = endereco.uf_cliente
+
+            currCliente['imovel'][posicao]['endereco']['rua'] = imovel.posicao.endereco.rua_imovel
+            currCliente['imovel'][posicao]['endereco']['numero'] = imovel.posicao.endereco.numero_imovel
+            currCliente['imovel'][posicao]['endereco']['andar'] = imovel.posicao.endereco.andar_imovel
+            currCliente['imovel'][posicao]['endereco']['bloco'] = imovel.posicao.endereco.bloco_imovel
+            currCliente['imovel'][posicao]['endereco']['bairro'] = imovel.posicao.endereco.bairro_imovel
+            currCliente['imovel'][posicao]['endereco']['cep'] = imovel.posicao.endereco.cep_imovel
+            currCliente['imovel'][posicao]['endereco']['cidade'] = imovel.posicao.endereco.cidade_imovel
+            currCliente['imovel'][posicao]['endereco']['uf'] = imovel.posicao.endereco.uf_imovel
+
+            currCliente['imovel'][posicao]['gastos']['energia'] = imovel.posicao.gastos.energia
+            currCliente['imovel'][posicao]['gastos']['agua'] = imovel.posicao.gastos.agua
+            currCliente['imovel'][posicao]['gastos']['condominio'] = imovel.posicao.gastos.condominio
+            currCliente['imovel'][posicao]['gastos']['propaganda'] = imovel.posicao.gastos.propaganda
+
+            currCliente['imovel'][posicao]['tipo'] = imovel.posicao.tipo
+            currCliente['imovel'][posicao]['idade'] = imovel.posicao.idade
+
+            output.append(currCliente)
+
         return jsonify(output)
+        
 
 
 @transacoes.route("/")
