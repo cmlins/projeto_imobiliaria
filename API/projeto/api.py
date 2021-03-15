@@ -7,7 +7,7 @@ github: cmlins
 from flask import Flask, request, jsonify
 from flask_restplus import Api, Resource, fields, marshal
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from flask_cors import CORS
 
 app = Flask(__name__)
 app_ = Api(app=app, version='1.0', title='Imobiliaria', description='Sistema de venda de imóveis')
@@ -16,14 +16,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.debug = True
 app.secret_key = "alquimia"
 db = SQLAlchemy(app)
+CORS(app)
 
 ########### ÁREAS DO SWAGGER ###########
 
 cliente = app_.namespace('Clientes', descrition='Cliente')
 transacoes = app_.namespace('Transações', descrition='Transações')
-imoveis = app_.namespace('Imóveis', descrition='Imóveis')
+imoveis = app_.namespace('Imoveis', descrition='Imoveis')
 pessoas = app_.namespace('Pessoas', descrition='Dados pessoais dos clientes')
-enderecos = app_.namespace('Endereços', descrition='Imóveis')
+enderecos = app_.namespace('Endereços', descrition='Imoveis')
 
 ########### CLASSES PARA A CRIAÇÃO DAS TABELAS ###########
 
@@ -414,6 +415,33 @@ class MainClass(Resource):
             currImovel['idade'] = imovel.idade
             output.append(currImovel)
 
+        return jsonify(output)
+
+@imoveis.route("/tipo")
+class MainClass(Resource):
+    def get(self):
+        tipos = Tipo.query.all()
+        output = []
+        for tipo in tipos:
+            currTipo = {}
+            currTipo['id_tipo'] = tipo.id_tipo
+            currTipo['tipo'] = tipo.tipo
+            output.append(currTipo)
+        return jsonify(output)
+
+@imoveis.route("/gastos")
+class MainClass(Resource):
+    def get(self):
+        gastos = Gastos.query.all()
+        output = []
+        for gasto in gastos:
+            currGasto = {}
+            currGasto['id_gastos'] = gasto.id_gastos
+            currGasto['energia'] = gasto.energia
+            currGasto['agua'] = gasto.agua
+            currGasto['condominio'] = gasto.condominio
+            currGasto['propaganda'] = gasto.propaganda
+            output.append(currGasto)
         return jsonify(output)
 
 @imoveis.route("/<int:id>")

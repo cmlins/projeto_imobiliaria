@@ -6,3 +6,4 @@ psycopg2
 Flask-RESTPlus
 Werkzeug==0.16.0
 Flask-SQLAlchemy
+flask-cors
