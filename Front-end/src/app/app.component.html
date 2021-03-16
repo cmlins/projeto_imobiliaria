@@ -47,7 +47,35 @@
     <label>Cidade</label>
     <input #cidade_imovel type="text" id="cidade_imovel"> <br><br>
     <label>UF</label>
-    <input #uf_imovel type="text" id="uf_imovel"> <br><br>
+    <select #uf_imovel name="estados-brasil">
+      <option value="AC">Acre</option>
+      <option value="AL">Alagoas</option>
+      <option value="AP">Amapá</option>
+      <option value="AM">Amazonas</option>
+      <option value="BA">Bahia</option>
+      <option value="CE">Ceará</option>
+      <option value="DF">Distrito Federal</option>
+      <option value="ES">Espírito Santo</option>
+      <option value="GO">Goiás</option>
+      <option value="MA">Maranhão</option>
+      <option value="MT">Mato Grosso</option>
+      <option value="MS">Mato Grosso do Sul</option>
+      <option value="MG">Minas Gerais</option>
+      <option value="PA">Pará</option>
+      <option value="PB">Paraíba</option>
+      <option value="PR">Paraná</option>
+      <option value="PE">Pernambuco</option>
+      <option value="PI">Piauí</option>
+      <option value="RJ">Rio de Janeiro</option>
+      <option value="RN">Rio Grande do Norte</option>
+      <option value="RS">Rio Grande do Sul</option>
+      <option value="RO">Rondônia</option>
+      <option value="RR">Roraima</option>
+      <option value="SC">Santa Catarina</option>
+      <option value="SP">São Paulo</option>
+      <option value="SE">Sergipe</option>
+      <option value="TO">Tocantins</option>
+    </select>
     <hr>
     <h3>Gastos médios do imóvel</h3>
     <label>Energia</label>
@@ -62,9 +90,9 @@
     <label>Tipo de imóvel</label><br>
     <input #tipo type="radio" id="tipo" value="1">Casa<br>
     <input #tipo type="radio" id="tipo" value="2">Apartamento<br>
-    <input #tipo type="radio" id="tipo" value="3">Kitnet<br>
+    <input #tipo type="radio" id="tipo" value="3">Kitnet<br><br>
     <label>Idade do imóvel</label>
-    <input #idade type="text" id="idade" /> <br><br>
+    <input #idade type="text" id="idade" /> <br>
     <hr>
     <h3>Dados do proprietário</h3>
     <label>Nome</label>
@@ -78,7 +106,14 @@
     <label>Profissão</label>
     <input #profissao type="text" id="profissao"> <br><br>
     <label>Estado Civil</label>
-    <input #estado_civil type="text" id="estado_civil" /> <br><br>
+    <select #estado_civil name="estado_civil">
+      <option value="solteiro">Solteiro(a)</option>
+      <option value="casado">Casado(a)</option>
+      <option value="separado">Separado(a)</option>
+      <option value="divorciado">Divorciado(a)</option>
+      <option value="viuvo">Viúvo(a)</option>
+      <option value="amasiado">Amasiado(a)</option>
+  </select>
     <hr>
     <label>Rua</label>
     <input #rua_prop type="text" id="rua_prop"> <br><br>
@@ -95,7 +130,35 @@
     <label>Cidade</label>
     <input #cidade_prop type="text" id="cidade_prop"> <br><br>
     <label>UF</label>
-    <input #uf_prop type="text" id="uf_prop"> <br><br>
+    <select #uf_prop name="estados-brasil">
+      <option value="AC">Acre</option>
+      <option value="AL">Alagoas</option>
+      <option value="AP">Amapá</option>
+      <option value="AM">Amazonas</option>
+      <option value="BA">Bahia</option>
+      <option value="CE">Ceará</option>
+      <option value="DF">Distrito Federal</option>
+      <option value="ES">Espírito Santo</option>
+      <option value="GO">Goiás</option>
+      <option value="MA">Maranhão</option>
+      <option value="MT">Mato Grosso</option>
+      <option value="MS">Mato Grosso do Sul</option>
+      <option value="MG">Minas Gerais</option>
+      <option value="PA">Pará</option>
+      <option value="PB">Paraíba</option>
+      <option value="PR">Paraná</option>
+      <option value="PE">Pernambuco</option>
+      <option value="PI">Piauí</option>
+      <option value="RJ">Rio de Janeiro</option>
+      <option value="RN">Rio Grande do Norte</option>
+      <option value="RS">Rio Grande do Sul</option>
+      <option value="RO">Rondônia</option>
+      <option value="RR">Roraima</option>
+      <option value="SC">Santa Catarina</option>
+      <option value="SP">São Paulo</option>
+      <option value="SE">Sergipe</option>
+      <option value="TO">Tocantins</option>
+    </select>
 </div>
 
 <div style="width: 125px;">
