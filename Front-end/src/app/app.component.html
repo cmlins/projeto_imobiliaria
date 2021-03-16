@@ -53,3 +53,23 @@
   </table>
 </div>
 
+<h2>Novo imovel</h2>
+
+<div>
+  <br>
+   <label>Nome</label>
+   <input #nome type="text" id="nome" value="" name="nome"/> <br><br>
+   <label>Data Nascimento</label>
+   <input #datanascimento name="datanascimento" type="date" id="data_nascimento" name="data_nascimento"/> <br><br>
+   <label>CPF</label>
+   <input #cpf type="text" id="cpf" name="cpf"/> <br><br>
+</div>
+
+<br><br>
+
+<div style="width: 125px;">
+ <input type="button" (click)="insereNovoCliente(nome.value, datanascimento.value, cpf.value)" value="Inserir"> &nbsp;|&nbsp; <input type="button">
+</div>
+
+<br>
+

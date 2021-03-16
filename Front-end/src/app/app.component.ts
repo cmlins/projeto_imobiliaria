@@ -55,4 +55,19 @@ export class AppComponent {
     });
 
   }
+
+  insereNovoCliente(nome:string, datanascimento:Date, cpf:string){
+      this.apiService.postCliente({
+        "nome":nome ,
+        "data_nascimento":datanascimento,
+        "cpf": cpf
+      }).subscribe(data => {
+        console.log(data)
+      },
+      error  => {
+      console.log("Error", error);
+      });
+  }
+
+  }
 }

@@ -8,6 +8,8 @@ from flask import Flask, request, jsonify
 from flask_restplus import Api, Resource, fields, marshal
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from datetime import datetime
+
 
 app = Flask(__name__)
 app_ = Api(app=app, version='1.0', title='Imobiliaria', description='Sistema de venda de imóveis')
@@ -21,7 +23,7 @@ CORS(app)
 ########### ÁREAS DO SWAGGER ###########
 
 cliente = app_.namespace('Clientes', descrition='Cliente')
-transacoes = app_.namespace('Transações', descrition='Transações')
+transacoes = app_.namespace('Transacoes', descrition='Transacoes')
 imoveis = app_.namespace('Imoveis', descrition='Imoveis')
 pessoas = app_.namespace('Pessoas', descrition='Dados pessoais dos clientes')
 enderecos = app_.namespace('Endereços', descrition='Imoveis')
@@ -71,7 +73,7 @@ class Pessoa(db.Model):
     id_pessoa = db.Column(db.Integer, primary_key=True, autoincrement=True, unique=True)
     nome = db.Column(db.String, nullable=False)
     cpf = db.Column(db.String, nullable=False)
-    data_nasc = db.Column(db.String, nullable=False)
+    data_nasc = db.Column(db.DateTime, nullable=False)
     rg = db.Column(db.String, nullable=False)
     profissao = db.Column(db.String, nullable=False)
     estado_civil = db.Column(db.String, nullable=False)
@@ -170,7 +172,7 @@ model_pessoa = app_.model('Pessoa model', {
     'id_pessoa': fields.Integer(required=True, description='id_pessoa', help='Preenchimento obrigatório'),
     'nome': fields.String(required=True, description='nome', help='Preenchimento obrigatório'),
     'cpf': fields.String(required=True, description='cpf', help='Preenchimento obrigatório'),
-    'data_nasc': fields.String(required=True, description='data_nasc', help='Preenchimento obrigatório'),
+    'data_nasc': fields.Date(required=True, description='data_nasc', help='Preenchimento obrigatório'),
     'rg': fields.String(required=True, description='rg', help='Preenchimento obrigatório'),
     'profissao': fields.String(required=True, description='profissao', help='Preenchimento obrigatório'),
     'estado_civil': fields.String(required=True, description='estado_civil', help='Preenchimento obrigatório')
@@ -219,230 +221,318 @@ model_transacoes = app_.model('Transacoes model', {
 @pessoas.route("/")
 class MainClass(Resource):
     def get(self):
-        allPessoas = Pessoa.query.all()
-        output = []
-        for pessoa in allPessoas:
-            currPessoa = {}
-            currPessoa['id_pessoa'] = pessoa.id_pessoa
-            currPessoa['nome'] = pessoa.nome
-            currPessoa['cpf'] = pessoa.cpf
-            currPessoa['data_nasc'] = pessoa.data_nasc
-            currPessoa['rg'] = pessoa.rg
-            currPessoa['profissao'] = pessoa.profissao
-            currPessoa['estado_civil'] = pessoa.estado_civil
-            output.append(currPessoa)
-        return jsonify(output)
+      allPessoas = Pessoa.query.all()
+      output = []
+      for pessoa in allPessoas:
+          currPessoa = {}
+          currPessoa['id_pessoa'] = pessoa.id_pessoa
+          currPessoa['nome'] = pessoa.nome
+          currPessoa['cpf'] = pessoa.cpf
+          currPessoa['data_nasc'] = pessoa.data_nasc
+          currPessoa['rg'] = pessoa.rg
+          currPessoa['profissao'] = pessoa.profissao
+          currPessoa['estado_civil'] = pessoa.estado_civil
+          output.append(currPessoa)
+          
+      return jsonify(output)
+
+    def post(self):
+      res = request.get_json()
+
+      nome = res['nome']
+      cpf = res['cpf']
+      data_nasc = res['data_nasc']
+      rg = res['rg']
+      profissao = res['profissao']
+      estado_civil = res['estado_civil']
+
+      pessoa = Pessoa(nome, cpf, data_nasc, rg, profissao, estado_civil)
+      db.session.add(pessoa)        
+      db.session.commit()
+
+      return jsonify(res)
 
 @pessoas.route("/<int:id>")
 class MainClass(Resource):
+  @app_.expect(model_pessoa)
+  def put(self, id):
+      res = request.get_json()
 
-    @app_.expect(model_pessoa)
-    def put(self, id):
-        res = request.get_json()
+      pes = Pessoa.query.get(id)
+      pes.cpf = res['cpf']
+      pes.data_nasc = res['data_nasc']
+      pes.estado_civil = res['estado_civil']
+      pes.nome = res['nome']
+      pes.profissao = res['profissao']
+      pes.rg = res['rg']
+      db.session.commit()
 
-        pes = Pessoa.query.get(id)
-        pes.cpf = res['cpf']
-        pes.data_nasc = res['data_nasc']
-        pes.estado_civil = res['estado_civil']
-        pes.nome = res['nome']
-        pes.profissao = res['profissao']
-        pes.rg = res['rg']
-        db.session.commit()
+      return {
+          'cpf': pes.cpf,
+          'data_nasc': pes.numero,
+          'estado_civil': pes.estado_civil,
+          'nome': pes.nome,
+          'profissao': pes.profissao,
+          'rg': pes.rg,
+      }
 
-        return {
-            'cpf': pes.cpf,
-            'data_nasc': pes.numero,
-            'estado_civil': pes.estado_civil,
-            'nome': pes.nome,
-            'profissao': pes.profissao,
-            'rg': pes.rg,
-        }
+  def get(self, id):
+      pes = Endereco.query.get(id)
+      return {
+          'rua': pes.rua,
+          'numero': pes.numero,
+          'andar': pes.andar,
+          'bloco': pes.bloco,
+          'bairro': pes.bairro,
+          'cep': pes.cep,
+          'cidade': pes.cidade,
+          'uf': pes.uf
+      }
 
-    def get(self, id):
-        pes = Endereco.query.get(id)
-        return {
-            'rua': pes.rua,
-            'numero': pes.numero,
-            'andar': pes.andar,
-            'bloco': pes.bloco,
-            'bairro': pes.bairro,
-            'cep': pes.cep,
-            'cidade': pes.cidade,
-            'uf': pes.uf
-        }
+  def delete(self, id):
+    pes = Pessoa.query.get_or_404(id)
+    try:        
+      db.session.delete(pes)
+      db.session.commit()
+      return(f'Pessoa {id} excluido')
+    except:
+        return "Pessoa não deletada"
 
 
 ########### ROTAS ENDEREÇO ###########
 
 @enderecos.route("/<int:id>")
 class MainClass(Resource):
-    @app_.expect(model_end)
-    def put(self, id):
-        res = request.get_json()
+  @app_.expect(model_end)
+  def put(self, id):
+    res = request.get_json()
 
-        end = Endereco.query.get(id)
-        end.rua = res['rua']
-        end.numero = res['numero']
-        end.andar = res['andar']
-        end.bloco = res['bloco']
-        end.bairro = res['bairro']
-        end.cep = res['cep']
-        end.cidade = res['cidade']
-        end.uf = res['uf']
-        db.session.commit()
+    end = Endereco.query.get(id)
+    end.rua = res['rua']
+    end.numero = res['numero']
+    end.andar = res['andar']
+    end.bloco = res['bloco']
+    end.bairro = res['bairro']
+    end.cep = res['cep']
+    end.cidade = res['cidade']
+    end.uf = res['uf']
+    db.session.commit()
 
-        return {
-            'rua': end.rua,
-            'numero': end.numero,
-            'andar': end.andar,
-            'bloco': end.bloco,
-            'bairro': end.bairro,
-            'cep': end.cep,
-            'cidade': end.cidade,
-            'uf': end.uf
-        }
+    return {
+        'rua': end.rua,
+        'numero': end.numero,
+        'andar': end.andar,
+        'bloco': end.bloco,
+        'bairro': end.bairro,
+        'cep': end.cep,
+        'cidade': end.cidade,
+        'uf': end.uf
+    }
 
-    def get(self, id):
-        end = Endereco.query.get(id)
-        return {
-            'rua': end.rua,
-            'numero': end.numero,
-            'andar': end.andar,
-            'bloco': end.bloco,
-            'bairro': end.bairro,
-            'cep': end.cep,
-            'cidade': end.cidade,
-            'uf': end.uf
-        }
+  def get(self, id):
+      end = Endereco.query.get(id)
+      return {
+          'rua': end.rua,
+          'numero': end.numero,
+          'andar': end.andar,
+          'bloco': end.bloco,
+          'bairro': end.bairro,
+          'cep': end.cep,
+          'cidade': end.cidade,
+          'uf': end.uf
+      }
+
+  def delete(self, id):
+    end = Endereco.query.get_or_404(id)
+    try:        
+      db.session.delete(end)
+      db.session.commit()
+      return(f'Endereço {id} excluido')
+    except:
+        return "Endereço não deletado"
 
 @enderecos.route("/")
 class MainClass(Resource):
-    def get(self):
-        allEnderecos = Endereco.query.all()
-        output = []
-        for endereco in allEnderecos:
-            currEndereco = {}
-            currEndereco['id_endereco'] = endereco.id_endereco
-            currEndereco['rua'] = endereco.rua
-            currEndereco['numero'] = endereco.numero
-            currEndereco['andar'] = endereco.andar
-            currEndereco['bloco'] = endereco.bloco
-            currEndereco['bairro'] = endereco.bairro
-            currEndereco['cep'] = endereco.cep
-            currEndereco['cidade'] = endereco.cidade
-            currEndereco['uf'] = endereco.uf
-            output.append(currEndereco)
-        return jsonify(output)
+  def get(self):
+      allEnderecos = Endereco.query.all()
+      output = []
+      for endereco in allEnderecos:
+          currEndereco = {}
+          currEndereco['id_endereco'] = endereco.id_endereco
+          currEndereco['rua'] = endereco.rua
+          currEndereco['numero'] = endereco.numero
+          currEndereco['andar'] = endereco.andar
+          currEndereco['bloco'] = endereco.bloco
+          currEndereco['bairro'] = endereco.bairro
+          currEndereco['cep'] = endereco.cep
+          currEndereco['cidade'] = endereco.cidade
+          currEndereco['uf'] = endereco.uf
+          output.append(currEndereco)
+      return jsonify(output)
+
+  def post(self):
+    res = request.get_json()
+
+    rua_cliente = res['rua']
+    numero_cliente = res['numero']
+    andar_cliente = res['andar']
+    bloco_cliente = res['bloco']
+    bairro_cliente = res['bairro']
+    cep_cliente = res['cep']
+    cidade_cliente = res['cidade']
+    uf_cliente = res['uf']     
+    
 
 ########### ROTAS IMOVEL ###########
 
 @imoveis.route("/")
 class MainClass(Resource):
-    @app_.expect(model_imovel)
-    def post(self):
-        res = request.get_json()
+  @app_.expect(model_imovel)
+  def post(self):
+    res = request.get_json()
 
-        rua_imovel = res['endereco']['rua']
-        numero_imovel = res['endereco']['numero']
-        andar_imovel = res['endereco']['andar']
-        bloco_imovel = res['endereco']['bloco']
-        bairro_imovel = res['endereco']['bairro']
-        cep_imovel = res['endereco']['cep']
-        cidade_imovel = res['endereco']['cidade']
-        uf_imovel = res['endereco']['uf']
+    rua_imovel = res['endereco']['rua']
+    numero_imovel = res['endereco']['numero']
+    andar_imovel = res['endereco']['andar']
+    bloco_imovel = res['endereco']['bloco']
+    bairro_imovel = res['endereco']['bairro']
+    cep_imovel = res['endereco']['cep']
+    cidade_imovel = res['endereco']['cidade']
+    uf_imovel = res['endereco']['uf']
 
-        energia = res['gastos']['energia']
-        agua = res['gastos']['agua']
-        condominio = res['gastos']['condominio']
-        propaganda = res['gastos']['propaganda']
+    energia = res['gastos']['energia']
+    agua = res['gastos']['agua']
+    condominio = res['gastos']['condominio']
+    propaganda = res['gastos']['propaganda']
 
-        tipo = res['tipo']
-        idade = res['idade']
+    tipo = res['tipo']
+    idade = res['idade']
 
-        # proprietario
-        nome = res['proprietario']['pessoa']['nome']
-        cpf = res['proprietario']['pessoa']['cpf']
-        data_nasc = res['proprietario']['pessoa']['data_nasc']
-        rg = res['proprietario']['pessoa']['rg']
-        profissao = res['proprietario']['pessoa']['profissao']
-        estado_civil = res['proprietario']['pessoa']['estado_civil']
+    # proprietario
+    nome = res['proprietario']['pessoa']['nome']
+    cpf = res['proprietario']['pessoa']['cpf']
+    data_nasc = res['proprietario']['pessoa']['data_nasc']
+    rg = res['proprietario']['pessoa']['rg']
+    profissao = res['proprietario']['pessoa']['profissao']
+    estado_civil = res['proprietario']['pessoa']['estado_civil']
 
-        rua_cliente = res['proprietario']['endereco']['rua']
-        numero_cliente = res['proprietario']['endereco']['numero']
-        andar_cliente = res['proprietario']['endereco']['andar']
-        bloco_cliente = res['proprietario']['endereco']['bloco']
-        bairro_cliente = res['proprietario']['endereco']['bairro']
-        cep_cliente = res['proprietario']['endereco']['cep']
-        cidade_cliente = res['proprietario']['endereco']['cidade']
-        uf_cliente = res['proprietario']['endereco']['uf']        
+    rua_cliente = res['proprietario']['endereco']['rua']
+    numero_cliente = res['proprietario']['endereco']['numero']
+    andar_cliente = res['proprietario']['endereco']['andar']
+    bloco_cliente = res['proprietario']['endereco']['bloco']
+    bairro_cliente = res['proprietario']['endereco']['bairro']
+    cep_cliente = res['proprietario']['endereco']['cep']
+    cidade_cliente = res['proprietario']['endereco']['cidade']
+    uf_cliente = res['proprietario']['endereco']['uf']        
 
-        pessoa = Pessoa(nome, cpf, data_nasc, rg, profissao, estado_civil)
-        db.session.add(pessoa)        
-        db.session.commit()
+    pessoa = Pessoa(nome, cpf, data_nasc, rg, profissao, estado_civil)
+    db.session.add(pessoa)        
+    db.session.commit()
 
-        endereco_cliente = Endereco(rua_cliente, numero_cliente, andar_cliente, bloco_cliente, bairro_cliente, cep_cliente, cidade_cliente, uf_cliente)
-        db.session.add(endereco_cliente)        
-        db.session.commit()        
+    endereco_cliente = Endereco(rua_cliente, numero_cliente, andar_cliente, bloco_cliente, bairro_cliente, cep_cliente, cidade_cliente, uf_cliente)
+    db.session.add(endereco_cliente)        
+    db.session.commit()        
 
-        cliente = Cliente(pessoa.id_pessoa, endereco_cliente.id_endereco)
-        db.session.add(cliente)        
-        db.session.commit()
+    cliente = Cliente(pessoa.id_pessoa, endereco_cliente.id_endereco)
+    db.session.add(cliente)        
+    db.session.commit()
 
-        endereco_imovel = Endereco(rua_imovel, numero_imovel, andar_imovel, bloco_imovel, bairro_imovel, cep_imovel, cidade_imovel, uf_imovel)
-        db.session.add(endereco_imovel)        
-        db.session.commit()
+    endereco_imovel = Endereco(rua_imovel, numero_imovel, andar_imovel, bloco_imovel, bairro_imovel, cep_imovel, cidade_imovel, uf_imovel)
+    db.session.add(endereco_imovel)        
+    db.session.commit()
 
-        gastos = Gastos(energia, agua, condominio, propaganda)
-        db.session.add(gastos)        
-        db.session.commit()
+    gastos = Gastos(energia, agua, condominio, propaganda)
+    db.session.add(gastos)        
+    db.session.commit()
 
-        imovel = Imovel(endereco_imovel.id_endereco, tipo, gastos.id_gastos, idade, cliente.id_cliente)
-        db.session.add(imovel)        
-        db.session.commit()
+    imovel = Imovel(endereco_imovel.id_endereco, tipo, gastos.id_gastos, idade, cliente.id_cliente)
+    db.session.add(imovel)        
+    db.session.commit()
 
-        print(res)
+    return jsonify(res)
 
-    def get(self):
-        allImoveis = Imovel.query.all()
-        output = []
-        for imovel in allImoveis:
-            currImovel = {}
-            currImovel['id_imovel'] = imovel.id_imovel
-            currImovel['id_endereco'] = imovel.id_endereco
-            currImovel['id_tipo'] = imovel.id_tipo
-            currImovel['id_gastos'] = imovel.id_gastos
-            currImovel['id_cliente'] = imovel.id_cliente
-            currImovel['idade'] = imovel.idade
-            output.append(currImovel)
+  def get(self):
+    allImoveis = Imovel.query.all()
+    output = []
+    for imovel in allImoveis:
+        currImovel = {}
+        currImovel['id_imovel'] = imovel.id_imovel
+        currImovel['id_endereco'] = imovel.id_endereco
+        currImovel['id_tipo'] = imovel.id_tipo
+        currImovel['id_gastos'] = imovel.id_gastos
+        currImovel['id_cliente'] = imovel.id_cliente
+        currImovel['idade'] = imovel.idade
+        output.append(currImovel)
 
-        return jsonify(output)
+    return jsonify(output)
 
 @imoveis.route("/tipo")
 class MainClass(Resource):
-    def get(self):
-        tipos = Tipo.query.all()
-        output = []
-        for tipo in tipos:
-            currTipo = {}
-            currTipo['id_tipo'] = tipo.id_tipo
-            currTipo['tipo'] = tipo.tipo
-            output.append(currTipo)
-        return jsonify(output)
+  def get(self):
+    tipos = Tipo.query.all()
+    output = []
+    for tipo in tipos:
+      currTipo = {}
+      currTipo['id_tipo'] = tipo.id_tipo
+      currTipo['tipo'] = tipo.tipo
+      output.append(currTipo)
+    return jsonify(output)
 
 @imoveis.route("/gastos")
 class MainClass(Resource):
-    def get(self):
-        gastos = Gastos.query.all()
-        output = []
-        for gasto in gastos:
-            currGasto = {}
-            currGasto['id_gastos'] = gasto.id_gastos
-            currGasto['energia'] = gasto.energia
-            currGasto['agua'] = gasto.agua
-            currGasto['condominio'] = gasto.condominio
-            currGasto['propaganda'] = gasto.propaganda
-            output.append(currGasto)
-        return jsonify(output)
+  def get(self):
+    gastos = Gastos.query.all()
+    output = []
+    for gasto in gastos:
+      currGasto = {}
+      currGasto['id_gastos'] = gasto.id_gastos
+      currGasto['energia'] = gasto.energia
+      currGasto['agua'] = gasto.agua
+      currGasto['condominio'] = gasto.condominio
+      currGasto['propaganda'] = gasto.propaganda
+      output.append(currGasto)
+    return jsonify(output)
+
+  def post(self):
+    res = request.get_json()
+
+    energia = res['energia']
+    agua = res['agua']
+    condominio = res['condominio']
+    propaganda = res['propaganda']
+
+    gastos = Gastos(energia, agua, condominio, propaganda)
+    db.session.add(gastos)        
+    db.session.commit()
+
+@imoveis.route("/gastos/<int:id>")
+class MainClass(Resource):
+  @app_.expect(model_gastos)
+  def put(self, id):
+    res = request.get_json()
+
+    gas = Gastos.query.get(id)
+    gas.energia = res['energia']
+    gas.agua = res['agua']
+    gas.condominio = res['condominio']
+    gas.propaganda = res['propaganda']
+    db.session.commit()
+
+    return {
+      'energia': gas.energia,
+      'agua': gas.agua,
+      'condominio': gas.condominio,
+      'propaganda': gas.propaganda,
+    }
+
+  def delete(self, id):
+    gas = Gastos.query.get_or_404(id)
+    try:
+      db.session.delete(gas)
+      db.session.commit()
+      return(f'Gasto {id} excluido')
+    except:
+      return "Gasto não deletado"
 
 @imoveis.route("/<int:id>")
 class MainClass(Resource):
@@ -451,132 +541,252 @@ class MainClass(Resource):
         end = Endereco.query.get_or_404(imo.id_endereco)
         gas = Gastos.query.get_or_404(imo.id_gastos)
         try:
-            db.session.delete(gas)
-            db.session.delete(end)
-            db.session.delete(imo)
-            db.session.commit()
-            return(f'Imovel {id} excluido')
+          db.session.delete(gas)
+          db.session.delete(end)
+          db.session.delete(imo)
+          db.session.commit()
+          return(f'Imovel {id} excluido')
         except:
-            return "Imovel não deletado"
+          return "Imovel não deletado"
 
 ########### ROTAS CLIENTE ###########
 
 @cliente.route("/")
 class MainClass(Resource):
-    @app_.expect(model_cliente)
-    def post(self):
-        res = request.get_json()
-       
-        nome = res['pessoa']['nome']
-        cpf = res['pessoa']['cpf']
-        data_nasc = res['pessoa']['data_nasc']
-        rg = res['pessoa']['rg']
-        profissao = res['pessoa']['profissao']
-        estado_civil = res['pessoa']['estado_civil']
+  @app_.expect(model_cliente)
+  def post(self):
+      res = request.get_json()
+      
+      nome = res['pessoa']['nome']
+      cpf = res['pessoa']['cpf']
+      data_nasc = res['pessoa']['data_nasc']
+      rg = res['pessoa']['rg']
+      profissao = res['pessoa']['profissao']
+      estado_civil = res['pessoa']['estado_civil']
 
-        rua_cliente = res['endereco']['rua']
-        numero_cliente = res['endereco']['numero']
-        andar_cliente = res['endereco']['andar']
-        bloco_cliente = res['endereco']['bloco']
-        bairro_cliente = res['endereco']['bairro']
-        cep_cliente = res['endereco']['cep']
-        cidade_cliente = res['endereco']['cidade']
-        uf_cliente = res['endereco']['uf']        
+      rua_cliente = res['endereco']['rua']
+      numero_cliente = res['endereco']['numero']
+      andar_cliente = res['endereco']['andar']
+      bloco_cliente = res['endereco']['bloco']
+      bairro_cliente = res['endereco']['bairro']
+      cep_cliente = res['endereco']['cep']
+      cidade_cliente = res['endereco']['cidade']
+      uf_cliente = res['endereco']['uf']        
 
-        pessoa = Pessoa(nome, cpf, data_nasc, rg, profissao, estado_civil)
-        db.session.add(pessoa)        
-        db.session.commit()
+      pessoa = Pessoa(nome, cpf, data_nasc, rg, profissao, estado_civil)
+      db.session.add(pessoa)        
+      db.session.commit()
 
-        endereco_cliente = Endereco(rua_cliente, numero_cliente, andar_cliente, bloco_cliente, bairro_cliente, cep_cliente, cidade_cliente, uf_cliente)
-        db.session.add(endereco_cliente)        
-        db.session.commit()        
+      endereco_cliente = Endereco(rua_cliente, numero_cliente, andar_cliente, bloco_cliente, bairro_cliente, cep_cliente, cidade_cliente, uf_cliente)
+      db.session.add(endereco_cliente)        
+      db.session.commit()        
 
-        cliente = Cliente(pessoa.id_pessoa, endereco_cliente.id_endereco)
-        db.session.add(cliente)        
-        db.session.commit()
+      cliente = Cliente(pessoa.id_pessoa, endereco_cliente.id_endereco)
+      db.session.add(cliente)        
+      db.session.commit()
 
-        return jsonify(res)
+      return jsonify(res)
 
-    def get(self):
-        allClientes = Cliente.query.all()
-        output = []
-        for cliente in allClientes:
-            currCliente = {}
-            currCliente['id_cliente'] = cliente.id_cliente
-            currCliente['id_pessoa'] = cliente.id_pessoa
-            currCliente['id_endereco'] = cliente.id_endereco
-            output.append(currCliente)
+  def get(self):
+      allClientes = Cliente.query.all()
+      output = []
+      for cliente in allClientes:
+          currCliente = {}
+          currCliente['id_cliente'] = cliente.id_cliente
+          currCliente['id_pessoa'] = cliente.id_pessoa
+          currCliente['id_endereco'] = cliente.id_endereco
+          output.append(currCliente)
 
-        return jsonify(output)        
+      return jsonify(output)        
 
 @cliente.route("/<int:id>")
 class MainClass(Resource):
     
-    def delete(self, id):
-        cli = Cliente.query.get_or_404(id)
-        pes = Pessoa.query.get_or_404(cli.id_pessoa)
-        end = Endereco.query.get_or_404(cli.id_endereco)
-        try:
-            db.session.delete(cli)
-            db.session.delete(pes)
-            db.session.delete(end)
-            db.session.commit()
-            return(f'Cliente {id} excluido')
-        except:
-            return "Cliente não deletado"
+  def delete(self, id):
+      cli = Cliente.query.get_or_404(id)
+      pes = Pessoa.query.get_or_404(cli.id_pessoa)
+      end = Endereco.query.get_or_404(cli.id_endereco)
+      try:
+          db.session.delete(cli)
+          db.session.delete(pes)
+          db.session.delete(end)
+          db.session.commit()
+          return(f'Cliente {id} excluido')
+      except:
+          return "Cliente não deletado"
 
-    def get(self, id):
-        cli = Cliente.query.get(id)
-        return {
-            'id_cliente': cliente.id_cliente,
-            'id_pessoa': cliente.id_pessoa,
-            'id_endereco': cliente.id_endereco,
-        }
+  def get(self, id):
+      cli = Cliente.query.get(id)
+      return {
+          'id_cliente': cliente.id_cliente,
+          'id_pessoa': cliente.id_pessoa,
+          'id_endereco': cliente.id_endereco,
+      }
+
+  @app_.expect(model_cliente)
+  def put(self, id):
+    res = request.get_json()
+    cli = Cliente.query.get(id)
+    
+    cli.id_cliente = res['id_cliente']
+    cli.id_pessoa = res['id_pessoa']
+    cli.id_endereco = res['id_endereco']
+    db.session.commit()
+
+    return {
+      'id_cliente': cli.id_cliente,
+      'id_pessoa': cli.id_pessoa,
+      'id_endereco': cli.id_endereco,
+    }    
 
 ########### ROTAS TRANSAÇÕES ###########
 
 @transacoes.route("/")
 class MainClass(Resource):
-    @app_.expect(model_transacoes)
-    def post(self):
-        res = request.get_json()
-        print(res)
-        comprador = res['id_comprador']
-        proprietario = res['id_proprietario']
-        imovel = res['id_imovel']
+  @app_.expect(model_transacoes)
+  def post(self):
+    res = request.get_json()
+    print(res)
+    comprador = res['id_comprador']
+    proprietario = res['id_proprietario']
+    imovel = res['id_imovel']
 
-        a_vista = res['pagamento']['vista']
-        id_banco = res['pagamento']['id_banco']
-        entrada = res['pagamento']['entrada']
-        n_parcelas = res['pagamento']['n_parcelas']
+    a_vista = res['pagamento']['vista']
+    id_banco = res['pagamento']['id_banco']
+    entrada = res['pagamento']['entrada']
+    n_parcelas = res['pagamento']['n_parcelas']
 
-        pagamento = Pagamento(a_vista, id_banco, entrada, n_parcelas)
-        db.session.add(pagamento)
-        db.session.commit()
+    pagamento = Pagamento(a_vista, id_banco, entrada, n_parcelas)
+    db.session.add(pagamento)
+    db.session.commit()
 
-        transacao = Transacao(imovel, comprador, proprietario, pagamento.id_pagamento)
-        db.session.add(transacao)
-        db.session.commit()
+    transacao = Transacao(imovel, comprador, proprietario, pagamento.id_pagamento)
+    db.session.add(transacao)
+    db.session.commit()
 
-        imovel = Imovel.query.get_or_404(imovel)
-        imovel.id_cliente = transacao.id_comprador
-        db.session.commit()
+    imovel = Imovel.query.get_or_404(imovel)
+    imovel.id_cliente = transacao.id_comprador
+    db.session.commit()
+    return jsonify(res)
 
+  def get(self):
+    allTransacoes = Transacao.query.all()
+    output = []
+    for transacao in allTransacoes:
+      currTransacao = {}
+      currTransacao['id_comprador'] = transacao.id_comprador
+      currTransacao['id_proprietario'] = transacao.id_proprietario
+      currTransacao['id_imovel'] = transacao.id_imovel
+      
+      output.append(currTransacao)
 
-        print(res)
+      return jsonify(output)
 
-    def get(self):
-        allTransacoes = Transacao.query.all()
-        output = []
-        for transacao in allTransacoes:
-            currTransacao = {}
-            currTransacao['id_comprador'] = transacao.id_comprador
-            currTransacao['id_proprietario'] = transacao.id_proprietario
-            currTransacao['id_imovel'] = transacao.id_imovel
-            
-            output.append(currTransacao)
+@transacoes.route("/<int:id>")
+class MainClass(Resource):
+  @app_.expect(model_transacoes)
+  def put(self, id):
+    res = request.get_json()
+    transacao = Transacao.query.get(id)
 
-        return jsonify(output)
+    transacao.id_comprador = res['id_comprador']
+    transacao.id_proprietario = res['id_proprietario']
+    transacao.id_imovel = res['id_imovel']
+
+    return {
+      'id_comprador': transacao.id_comprador,
+      'id_proprietario': transacao.id_proprietario,
+      'id_imovel': transacao.id_imovel,
+    }
+
+  def delete(self, id):
+    transacao = Transacao.query.get_or_404(id)
+    try:
+      db.session.delete(transacao)
+      db.session.commit()
+      return(f'Transação {id} excluida')
+    except:
+      return "Transação não deletada"
+
+  def get(self, id):
+    transacao = Transacao.query.get(id)
+    return {
+      'id_comprador': transacao.id_comprador,
+      'id_proprietario': transacao.id_proprietario,
+      'id_imovel': transacao.id_imovel,
+    }
+
+@transacoes.route("/pagamento")
+class MainClass(Resource):
+  @app_.expect(model_pagamento)
+  def post(self):
+    res = request.get_json()
+
+    a_vista = res['vista']
+    id_banco = res['id_banco']
+    entrada = res['entrada']
+    n_parcelas = res['n_parcelas']
+
+    pagamento = Pagamento(a_vista, id_banco, entrada, n_parcelas)
+    db.session.add(pagamento)
+    db.session.commit()
+
+    return jsonify(res)
+
+  def get(self):
+    allPagamentos = Pagamento.query.all()
+    output = []
+    for pagamento in allPagamentos:
+        currPagamento = {}
+        currPagamento['vista'] = pagamento.vista
+        currPagamento['id_banco'] = pagamento.id_banco
+        currPagamento['entrada'] = pagamento.entrada
+        currPagamento['n_parcelas'] = pagamento.n_parcelas        
+        output.append(currPagamento)
+
+    return jsonify(output)
+
+@transacoes.route("/pagamento/<int:id>")
+class MainClass(Resource):
+  @app_.expect(model_pagamento)
+  def delete(self, id):
+    pag = Pagamento.query.get_or_404(id)
+    try:        
+      db.session.delete(pag)
+      db.session.commit()
+      return(f'Pagamento {id} excluido')
+    except:
+        return "Pagamento não deletado"
+  
+  @app_.expect(model_transacoes)
+  def put(self, id):
+    res = request.get_json()
+    pag = Pagamento.query.get(id)
+    
+    pagamento.vista = res['vista']
+    pagamento.id_banco = res['id_banco']
+    pagamento.entrada = res['entrada']
+    pagamento.n_parcelas = res['n_parcelas']
+    db.session.commit()
+
+    return {
+      'vista': pagamento.vista,
+      'id_banco': pagamento.id_banco,
+      'entrada': pagamento.entrada,
+      'n_parcelas': pagamento.n_parcelas,
+    }    
+
+@transacoes.route("/banco")
+class MainClass(Resource):
+  def get(self):
+    bancos = Banco.query.all()
+    output = []
+    for banco in bancos:
+        currBanco = {}
+        currBanco['id_banco'] = tipo.id_banco
+        currBanco['nome_banco'] = tipo.nome_banco
+        output.append(currBanco)
+    return jsonify(output)
 
 if __name__ == '__main__':
     app.run(debug = True)
