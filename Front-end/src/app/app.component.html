@@ -2,7 +2,7 @@
   <h1>Imobiliária</h1>
 </div>
 
-<br/><br/>
+<!-- <br/><br/>
 <div class="diretivasFor">
   <h2>Proprietários</h2>
   <table>
@@ -17,7 +17,7 @@
     <tr  *ngFor="let imovel of imoveis; index as i">
       <td>{{pessoas[i].nome}}</td>
       <td>{{pessoas[i].cpf}}</td>
-      <td>{{pessoas[i].data_nasc}}</td>
+      <td>{{pessoas[i].data_nasc | date: 'yyyy-MM-dd'}}</td>
       <td>{{pessoas[i].rg}}</td>
       <td>{{pessoas[i].profissao}}</td>
       <td>{{pessoas[i].estado_civil}}</td>
@@ -51,24 +51,118 @@
       <td>{{tipos[i].tipo}}</td>
     </tr>
   </table>
-</div>
+</div> -->
 
 <h2>Novo imovel</h2>
 
-<div>
-  <br>
-   <label>Nome</label>
-   <input #nome type="text" id="nome" value="" name="nome"/> <br><br>
-   <label>Data Nascimento</label>
-   <input #datanascimento name="datanascimento" type="date" id="data_nascimento" name="data_nascimento"/> <br><br>
-   <label>CPF</label>
-   <input #cpf type="text" id="cpf" name="cpf"/> <br><br>
-</div>
+<form>
+  <div>
+    <br>
+      <h3>Endereço do imóvel</h3>
+      <label>Rua</label>
+      <input #rua_imovel type="text" id="rua_imovel" name="rua_imovel"/> <br><br>
+      <label>Número</label>
+      <input #numero_imovel name="numero_imovel" type="text" id="numero_imovel"/> <br><br>
+      <label>Andar</label>
+      <input #andar_imovel type="text" id="andar_imovel" name="andar_imovel"/> <br><br>
+      <label>Bloco</label>
+      <input #bloco_imovel type="text" id="bloco_imovel" name="bloco_imovel"/> <br><br>
+      <label>Bairro</label>
+      <input #bairro_imovel name="bairro_imovel" type="text" id="bairro_imovel"/> <br><br>
+      <label>CEP</label>
+      <input #cep_imovel type="text" id="cep_prop" name="cep_prop"/> <br><br>
+      <label>Cidade</label>
+      <input #cidade_imovel type="text" id="cidade_imovel" name="cidade_imovel"/> <br><br>
+      <label>UF</label>
+      <input #uf_imovel type="text" id="uf_imovel" name="uf_imovel"/> <br><br>
+      <hr>
+      <h3>Gastos médios do imóvel</h3>
+      <label>Energia</label>
+      <input #energia name="energia" type="number" id="energia"/> <br><br>
+      <label>Água</label>
+      <input #agua type="number" id="agua" name="agua"/> <br><br>
+      <label>Condomínio</label>
+      <input #condominio type="number" id="condominio" name="condominio"/> <br><br>
+      <label>Propaganda</label>
+      <input #propaganda name="propaganda" type="number" id="propaganda" /> <br><br>
+      <hr>
+      <label>Tipo de imóvel</label>
+      <input type="radio" name="id_tipo" id="id_tipo" value="1">Casa<br>
+      <input type="radio" name="id_tipo" id="id_tipo" value="2">Apartamento<br>
+      <input type="radio" name="id_tipo" id="id_tipo" value="3">Kitnet<br>
+      <label>Idade do imóvel</label>
+      <input #idade name="idade" type="number" id="idade" /> <br><br>
+      <hr>
+      <h3>Dados do proprietário</h3>
+      <label>Nome</label>
+      <input #nome type="text" id="nome" name="nome"/> <br><br>
+      <label>CPF</label>
+      <input #cpf type="text" id="cpf" name="cpf"/> <br><br>
+      <label>Data Nascimento</label>
+      <input #data_nasc name="data_nasc" type="date" id="data_nasc" /> <br><br>
+      <label>RG</label>
+      <input #rg type="text" id="rg" name="rg"/> <br><br>
+      <label>Profissão</label>
+      <input #profissao type="text" id="profissao" name="profissao"/> <br><br>
+      <label>Estado Civil</label>
+      <input #estado_civil name="estado_civil" type="text" id="estado_civil" /> <br><br>
+      <hr>
+      <label>Ruas</label>
+      <input #rua_prop type="text" id="rua_prop" name="rua_prop"/> <br><br>
+      <label>Número</label>
+      <input #numero_prop type="text" id="numero_prop" name="numero_prop"/> <br><br>
+      <label>Andar</label>
+      <input #andar_prop name="andar_prop" type="text" id="andar_prop" /> <br><br>
+      <label>Bloco</label>
+      <input #bloco_prop type="text" id="bloco_prop" name="bloco_prop"/> <br><br>
+      <label>Bairro</label>
+      <input #bairro_prop type="text" id="bairro_prop" name="bairro_prop"/> <br><br>
+      <label>CEP</label>
+      <input #cep_prop type="text" id="cep_prop" name="cep_prop"/> <br><br>
+      <label>Cidade</label>
+      <input #cidade_prop name="cidade_prop" type="text" id="cidade_prop" /> <br><br>
+      <label>UF</label>
+      <input #uf_prop type="text" id="uf_prop" name="uf_prop"/> <br><br>
+  </div>
+</form>
 
 <br><br>
 
 <div style="width: 125px;">
- <input type="button" (click)="insereNovoCliente(nome.value, datanascimento.value, cpf.value)" value="Inserir"> &nbsp;|&nbsp; <input type="button">
+ <input type="button" (click)="insereNovoCliente(
+    rua_imovel.value,
+    numero_imovel.value,
+    andar_imovel.value,
+    bloco_imovel.value,
+    bairro_imovel.value,
+    cep_imovel.value,
+    cidade_imovel.value,
+    uf_imovel.value,
+
+    idade.value,
+    id_tipo.value,
+
+    energia.value,
+    agua.value,
+    condominio.value,
+    propaganda.value,
+
+    nome.value,
+    cpf.value,
+    data_nasc.value,
+    rg.value,
+    profissao.value,
+    estado_civil.value,
+
+    rua_prop.value,
+    numero_prop.value,
+    andar_prop.value,
+    bloco_prop.value,
+    bairro_prop.value,
+    cep_prop.value,
+    cidade_prop.value,
+    uf_prop.value
+   )" value="Inserir"> &nbsp;|&nbsp; <input type="button">
 </div>
 
 <br>

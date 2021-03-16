@@ -783,8 +783,8 @@ class MainClass(Resource):
     output = []
     for banco in bancos:
         currBanco = {}
-        currBanco['id_banco'] = tipo.id_banco
-        currBanco['nome_banco'] = tipo.nome_banco
+        currBanco['id_banco'] = banco.id_banco
+        currBanco['nome_banco'] = banco.nome_banco
         output.append(currBanco)
     return jsonify(output)
 
