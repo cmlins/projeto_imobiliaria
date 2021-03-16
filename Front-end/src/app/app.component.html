@@ -1,57 +1,24 @@
-<div class="titulo">
-  <h1>Imobiliária</h1>
+<h2>nova pessoa</h2>
+
+<div>
+  <br>
+  <label>NOME: </label>
+  <input #nome type="text"><br>
+  <label>CPF: </label>
+  <input #cpf type="text"><br>
+  <label>DATA DE NASCIMENTO: </label>
+  <input #data_nasc type="text"><br>
+  <label>RG: </label>
+  <input #rg type="text"><br>
+  <label>PROFISSÃO: </label>
+  <input #profissao type="text"><br>
+  <label>ESTADO CIVIL: </label>
+  <input #estado_civil type="text"><br>
 </div>
 
-<!-- <br/><br/>
-<div class="diretivasFor">
-  <h2>Proprietários</h2>
-  <table>
-    <thead>
-      <th>Nome</th>
-      <th>CPF</th>
-      <th>Data de Nascimento</th>
-      <th>RG</th>
-      <th>Profissão</th>
-      <th>Estado Civil</th>
-    </thead>
-    <tr  *ngFor="let imovel of imoveis; index as i">
-      <td>{{pessoas[i].nome}}</td>
-      <td>{{pessoas[i].cpf}}</td>
-      <td>{{pessoas[i].data_nasc | date: 'yyyy-MM-dd'}}</td>
-      <td>{{pessoas[i].rg}}</td>
-      <td>{{pessoas[i].profissao}}</td>
-      <td>{{pessoas[i].estado_civil}}</td>
-    </tr>
-  </table>
+<div style="width: 125px;">
+  <input type="button" (click)="insereNovaPessoa(nome.value, cpf.value, data_nasc.value, rg.value, profissao.value, estado_civil.value)" value="Inserir">
 </div>
-
-<div  class="diretivasFor">
-  <h2>Endereço</h2>
-  <table >
-    <thead>
-      <th>Rua</th>
-      <th>Número</th>
-      <th>Bloco</th>
-      <th>Andar</th>
-      <th>Cidade</th>
-      <th>UF</th>
-      <th>CEP</th>
-      <th>Idade da construção</th>
-      <th>Tipo</th>
-    </thead>
-    <tr *ngFor="let imovel of imoveis; index as i">
-      <td>{{enderecos[i].rua}}</td>
-      <td>{{enderecos[i].numero}}</td>
-      <td>{{enderecos[i].bloco}}</td>
-      <td>{{enderecos[i].andar}}</td>
-      <td>{{enderecos[i].cidade}}</td>
-      <td>{{enderecos[i].uf}}</td>
-      <td>{{enderecos[i].cep}}</td>
-      <td>{{imovel.idade}}</td>
-      <td>{{tipos[i].tipo}}</td>
-    </tr>
-  </table>
-</div> -->
 
 <h2>Novo imovel</h2>
 
@@ -78,20 +45,20 @@
       <hr>
       <h3>Gastos médios do imóvel</h3>
       <label>Energia</label>
-      <input #energia name="energia" type="number" id="energia"/> <br><br>
+      <input #energia name="energia" type="text" id="energia"/> <br><br>
       <label>Água</label>
-      <input #agua type="number" id="agua" name="agua"/> <br><br>
+      <input #agua type="text" id="agua" name="agua"/> <br><br>
       <label>Condomínio</label>
-      <input #condominio type="number" id="condominio" name="condominio"/> <br><br>
+      <input #condominio type="text" id="condominio" name="condominio"/> <br><br>
       <label>Propaganda</label>
-      <input #propaganda name="propaganda" type="number" id="propaganda" /> <br><br>
+      <input #propaganda name="propaganda" type="text" id="propaganda" /> <br><br>
       <hr>
-      <label>Tipo de imóvel</label>
+      <label>Tipo de imóvel</label><br>
       <input type="radio" name="id_tipo" id="id_tipo" value="1">Casa<br>
       <input type="radio" name="id_tipo" id="id_tipo" value="2">Apartamento<br>
       <input type="radio" name="id_tipo" id="id_tipo" value="3">Kitnet<br>
       <label>Idade do imóvel</label>
-      <input #idade name="idade" type="number" id="idade" /> <br><br>
+      <input #idade name="idade" type="text" id="idade" /> <br><br>
       <hr>
       <h3>Dados do proprietário</h3>
       <label>Nome</label>
@@ -99,7 +66,7 @@
       <label>CPF</label>
       <input #cpf type="text" id="cpf" name="cpf"/> <br><br>
       <label>Data Nascimento</label>
-      <input #data_nasc name="data_nasc" type="date" id="data_nasc" /> <br><br>
+      <input #data_nasc name="data_nasc" type="text" id="data_nasc" /> <br><br>
       <label>RG</label>
       <input #rg type="text" id="rg" name="rg"/> <br><br>
       <label>Profissão</label>
@@ -107,7 +74,7 @@
       <label>Estado Civil</label>
       <input #estado_civil name="estado_civil" type="text" id="estado_civil" /> <br><br>
       <hr>
-      <label>Ruas</label>
+      <label>Rua</label>
       <input #rua_prop type="text" id="rua_prop" name="rua_prop"/> <br><br>
       <label>Número</label>
       <input #numero_prop type="text" id="numero_prop" name="numero_prop"/> <br><br>
@@ -138,22 +105,18 @@
     cep_imovel.value,
     cidade_imovel.value,
     uf_imovel.value,
-
     idade.value,
     id_tipo.value,
-
     energia.value,
     agua.value,
     condominio.value,
     propaganda.value,
-
     nome.value,
     cpf.value,
     data_nasc.value,
     rg.value,
     profissao.value,
     estado_civil.value,
-
     rua_prop.value,
     numero_prop.value,
     andar_prop.value,
@@ -164,6 +127,4 @@
     uf_prop.value
    )" value="Inserir"> &nbsp;|&nbsp; <input type="button">
 </div>
-
-<br>
 

@@ -49,18 +49,18 @@ export class ApiServiceService {
   }
 
   public postEndereço(endereco:any){
-    return this.httpClient.post(`http://127.0.0.1:5000/Endereços`, endereco);
+    return this.httpClient.post(`http://127.0.0.1:5000/Endereços/`, endereco);
   }
 
   public postCliente(cliente:any){
-    return this.httpClient.post(`http://127.0.0.1:5000/Clientes`, cliente);
+    return this.httpClient.post(`http://127.0.0.1:5000/Clientes/`, cliente);
   }
 
   public postPessoa(pessoa:any){
-    return this.httpClient.post(`http://127.0.0.1:5000/Clientes`, pessoa);
+    return this.httpClient.post(`http://127.0.0.1:5000/Pessoas/`, pessoa);
   }
 
   public postImovel(imovel:any){
-    return this.httpClient.post(`http://127.0.0.1:5000/Imoveis`, imovel);
+    return this.httpClient.post(`http://127.0.0.1:5000/Imoveis/`, imovel);
   }
 }
