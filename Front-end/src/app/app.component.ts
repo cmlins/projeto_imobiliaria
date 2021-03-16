@@ -56,7 +56,7 @@ export class AppComponent {
     });
   }
 
-  insereNovoCliente
+  insereNovoImovel
     (
     rua_imovel: string,
     numero_imovel: string,
@@ -67,7 +67,7 @@ export class AppComponent {
     cidade_imovel: string,
     uf_imovel: string,
     idade: string,
-    id_tipo: string,
+    tipo: string,
     energia: string,
     agua: string,
     condominio: string,
@@ -88,7 +88,7 @@ export class AppComponent {
     uf_prop: string,
     )
     {
-    this.apiService.postCliente({
+    this.apiService.postImovel({
       "endereco": {
         "rua": rua_imovel,
         "numero": numero_imovel,
@@ -99,7 +99,7 @@ export class AppComponent {
         "cidade": cidade_imovel,
         "uf": uf_imovel,
       },
-      "id_tipo": id_tipo,
+      "tipo": tipo,
       "gastos": {
         "energia": energia,
         "agua": agua,
@@ -125,13 +125,17 @@ export class AppComponent {
           "cep": cep_prop,
           "cidade": cidade_prop,
           "uf": uf_prop,
-        }
+        },
       }
     }).subscribe(data => {
+      console.log(data_nasc)
       console.log(data)
+
     },
     error  => {
-    console.log("Error", error);
+      console.log("Error", error);
+
+      console.log(data_nasc)
     });
   }
 
