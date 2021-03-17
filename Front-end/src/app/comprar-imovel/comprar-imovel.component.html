@@ -1,1 +1,96 @@
-<p>comprar-imovel works!</p>
+<br><br>
+<h2>Comprar Imóvel</h2>
+
+<div>
+  <br>
+  <h3>Dados do proprietário</h3>
+  <label>Nome</label>
+  <input #nome type="text" id="nome"> <br><br>
+  <label>CPF</label>
+  <input #cpf type="text" id="cpf"> <br><br>
+  <label>Data Nascimento</label>
+  <input #data_nasc type="text" id="data_nasc"> <br><br>
+  <label>RG</label>
+  <input #rg type="text" id="rg"> <br><br>
+  <label>Profissão</label>
+  <input #profissao type="text" id="profissao"> <br><br>
+  <label>Estado Civil</label>
+  <select #estado_civil name="estado_civil">
+    <option selected disabled value="">Selecione</option>
+    <option value="solteiro">Solteiro(a)</option>
+    <option value="casado">Casado(a)</option>
+    <option value="separado">Separado(a)</option>
+    <option value="divorciado">Divorciado(a)</option>
+    <option value="viuvo">Viúvo(a)</option>
+    <option value="amasiado">Amasiado(a)</option>
+  </select>
+  <hr>
+  <label>Rua</label>
+  <input #rua_prop type="text" id="rua_prop"> <br><br>
+  <label>Número</label>
+  <input #numero_prop type="text" id="numero_prop"> <br><br>
+  <label>Andar</label>
+  <input #andar_prop type="text" id="andar_prop"> <br><br>
+  <label>Bloco</label>
+  <input #bloco_prop type="text" id="bloco_prop"> <br><br>
+  <label>Bairro</label>
+  <input #bairro_prop type="text" id="bairro_prop"> <br><br>
+  <label>CEP</label>
+  <input #cep_prop type="text" id="cep_prop"> <br><br>
+  <label>Cidade</label>
+  <input #cidade_prop type="text" id="cidade_prop"> <br><br>
+  <label>UF</label>
+  <select #uf_prop name="estados-brasil">
+    <option selected disabled value="">Selecione</option>
+    <option value="AC">Acre</option>
+    <option value="AL">Alagoas</option>
+    <option value="AP">Amapá</option>
+    <option value="AM">Amazonas</option>
+    <option value="BA">Bahia</option>
+    <option value="CE">Ceará</option>
+    <option value="DF">Distrito Federal</option>
+    <option value="ES">Espírito Santo</option>
+    <option value="GO">Goiás</option>
+    <option value="MA">Maranhão</option>
+    <option value="MT">Mato Grosso</option>
+    <option value="MS">Mato Grosso do Sul</option>
+    <option value="MG">Minas Gerais</option>
+    <option value="PA">Pará</option>
+    <option value="PB">Paraíba</option>
+    <option value="PR">Paraná</option>
+    <option value="PE">Pernambuco</option>
+    <option value="PI">Piauí</option>
+    <option value="RJ">Rio de Janeiro</option>
+    <option value="RN">Rio Grande do Norte</option>
+    <option value="RS">Rio Grande do Sul</option>
+    <option value="RO">Rondônia</option>
+    <option value="RR">Roraima</option>
+    <option value="SC">Santa Catarina</option>
+    <option value="SP">São Paulo</option>
+    <option value="SE">Sergipe</option>
+    <option value="TO">Tocantins</option>
+  </select>
+</div>
+
+<div style="width: 125px;">
+  <input type="button" (click)="insereNovoCliente(
+    nome.value,
+    cpf.value,
+    data_nasc.value,
+    rg.value,
+    profissao.value,
+    estado_civil.value,
+    rua_prop.value,
+    numero_prop.value,
+    andar_prop.value,
+    bloco_prop.value,
+    bairro_prop.value,
+    cep_prop.value,
+    cidade_prop.value,
+    uf_prop.value)" value="Inserir" routerLink="/listar-imoveis">
+</div>
+
+<br><br>
+
+
+
