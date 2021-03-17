@@ -1,32 +1,18 @@
-.diretivasFor {
-  width: 100%;
-  padding: 5px;
-
-  table {
-    border: 1px solid #1C6EA4;
-    background-color: #EEEEEE;
-    width: 100%;
-    text-align: center;
-    border-collapse: collapse;
-
-    td, th {
-      border: 1px solid #AAAAAA;
-      padding: 3px 2px;
-    }
-
-    thead {
-      background: #1C6EA4;
-      background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-      background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-      background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
-      border-bottom: 2px solid #444444;
-
-      th {
-        font-size: 15px;
-        font-weight: bold;
-        color: #FFFFFF;
-        border-left: 2px solid #D0E4F5;
-      }
-    }
-  }
+.botoes-nav {
+  background-color: #383c44; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-table;
+  font-size: 16px;
+  position: relative;
+  top: 5px;
+  left: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 4px;
+  width: 250px;
 }
+

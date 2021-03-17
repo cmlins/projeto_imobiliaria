@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ListarImoveisComponent } from './listar-imoveis/listar-imoveis.component';
 import { NovoImovelComponent } from './novo-imovel/novo-imovel.component';
+import { ComprarImovelComponent } from './comprar-imovel/comprar-imovel.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ListarImoveisComponent,
-    NovoImovelComponent
+    NovoImovelComponent,
+    ComprarImovelComponent
   ],
   imports: [
     BrowserModule,
