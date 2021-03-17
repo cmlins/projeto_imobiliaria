@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 
@@ -6,6 +6,8 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ApiService {
+
+  enviarDadosImovel = new EventEmitter<any>();
 
   constructor(private httpClient: HttpClient) { }
 
@@ -33,11 +35,11 @@ export class ApiService {
   }
 
   public getEndereços(){
-    return this.httpClient.get(`http://127.0.0.1:5000/Endereços/`);
+    return this.httpClient.get(`http://127.0.0.1:5000/Endereco/`);
   }
 
   public getEndereço(id:any){
-    return this.httpClient.get(`http://127.0.0.1:5000/Endereços/${id}`);
+    return this.httpClient.get(`http://127.0.0.1:5000/Endereco/${id}`);
   }
 
   public getTipos(){
@@ -49,7 +51,7 @@ export class ApiService {
   }
 
   public postEndereço(endereco:any){
-    return this.httpClient.post(`http://127.0.0.1:5000/Endereços/`, endereco);
+    return this.httpClient.post(`http://127.0.0.1:5000/Endereco/`, endereco);
   }
 
   public postCliente(cliente:any){
@@ -62,5 +64,9 @@ export class ApiService {
 
   public postImovel(imovel:any){
     return this.httpClient.post(`http://127.0.0.1:5000/Imoveis/`, imovel);
+  }
+
+  public postTransacao(transacao:any){
+    return this.httpClient.post(`http://127.0.0.1:5000/Transacoes/`, transacao);
   }
 }

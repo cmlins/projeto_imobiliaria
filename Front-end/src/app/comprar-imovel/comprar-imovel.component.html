@@ -1,3 +1,9 @@
+<!-- comprar imovel
+<div class="id_imovel">
+  <h1>id imovel: {{ id_imovel }}</h1>
+  <h1>id proprietario: {{ id_proprietario }}</h1>
+</div>
+
 <br><br>
 <h2>Comprar Imóvel</h2>
 <br><br>
@@ -22,16 +28,17 @@
     </div>
     <div class="col-sm-4">
       <label>RG</label><br>
-    <input #rg type="text" id="rg">
+      <input #rg type="text" id="rg">
+    </div>
   </div>
 
   <div class="form-group row">
-    <div class="col-sm-6">
-      <br><label>Profissão</label><br>
+    <div class="col-sm-6"><br>
+      <label>Profissão</label><br>
       <input #profissao type="text" id="profissao">
     </div>
-    <div class="col-sm-6">
-      <br><label>Estado Civil</label><br>
+    <div class="col-sm-6"><br>
+      <label>Estado Civil</label><br>
       <select #estado_civil name="estado_civil" id="estado-civil">
         <option selected disabled value="">Selecione</option>
         <option value="solteiro">Solteiro(a)</option>
@@ -43,46 +50,47 @@
       </select>
   </div>
 </div>
+
 <div class="container">
   <hr>
   <div class="form-group row">
     <div class="col-sm-9">
       <label>Rua</label><br>
-      <input #rua_prop type="text" id="rua_prop">
+      <input #rua_comprador type="text" id="rua_comprador">
     </div>
     <div class="col-sm-3">
       <label>Número</label><br>
-      <input #numero_prop type="text" id="numero_prop">
+      <input #numero_comprador type="text" id="numero_comprador">
     </div>
   </div>
 
   <div class="form-group row">
-    <div class="col-sm-3">
+    <div class="col-sm-4">
       <label>Andar</label><br>
-      <input #andar_prop type="text" id="andar_prop">
+      <input #andar_comprador type="text" id="andar_comprador">
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-4">
       <label>Bloco</label><br>
-      <input #bloco_prop type="text" id="bloco_prop">
+      <input #bloco_comprador type="text" id="bloco_comprador">
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-4">
       <label>Bairro</label><br>
-  <input #bairro_prop type="text" id="bairro_prop">
+  <input #bairro_comprador type="text" id="bairro_comprador">
     </div>
   </div>
 
   <div class="form-group row">
-    <div class="col-sm-3">
+    <div class="col-sm-4">
       <label>CEP</label><br>
-      <input #cep_prop type="text" id="cep_prop">
+      <input #cep_comprador type="text" id="cep_comprador">
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-4">
       <label>Cidade</label><br>
-      <input #cidade_prop type="text" id="cidade_prop">
+      <input #cidade_comprador type="text" id="cidade_comprador">
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-4">
       <label>UF</label><br>
-      <select #uf_prop name="estados-brasil">
+      <select #uf_comprador name="estados-brasil">
         <option selected disabled value="">Selecione</option>
         <option value="AC">Acre</option>
         <option value="AL">Alagoas</option>
@@ -117,98 +125,63 @@
   <hr>
 </div>
 
-<!-- <div class="container"> -->
-  <!-- <br>
-  <h3>Dados do proprietário</h3>
-  <label>Nome</label>
-  <input #nome type="text" id="nome"> <br><br>
-  <label>CPF</label>
-  <input #cpf type="text" id="cpf"> <br><br>
-  <label>Data Nascimento</label>
-  <input #data_nasc type="text" id="data_nasc"> <br><br>
-  <label>RG</label>
-  <input #rg type="text" id="rg"> <br><br>
-  <label>Profissão</label>
-  <input #profissao type="text" id="profissao"> <br><br>
-  <label>Estado Civil</label>
-  <select #estado_civil name="estado_civil">
-    <option selected disabled value="">Selecione</option>
-    <option value="solteiro">Solteiro(a)</option>
-    <option value="casado">Casado(a)</option>
-    <option value="separado">Separado(a)</option>
-    <option value="divorciado">Divorciado(a)</option>
-    <option value="viuvo">Viúvo(a)</option>
-    <option value="amasiado">Amasiado(a)</option>
-  </select> -->
-<!--
-
-  <label>Rua</label>
-  <input #rua_prop type="text" id="rua_prop"> <br>
-  <label>Número</label>
-  <input #numero_prop type="text" id="numero_prop"> <br><br>
-  <label>Andar</label>
-  <input #andar_prop type="text" id="andar_prop"> <br><br>
-  <label>Bloco</label>
-  <input #bloco_prop type="text" id="bloco_prop"> <br><br>
-  <label>Bairro</label>
-  <input #bairro_prop type="text" id="bairro_prop"> <br><br>
-  <label>CEP</label>
-  <input #cep_prop type="text" id="cep_prop"> <br><br>
-  <label>Cidade</label>
-  <input #cidade_prop type="text" id="cidade_prop"> <br><br>
-  <label>UF</label>
-  <select #uf_prop name="estados-brasil">
-    <option selected disabled value="">Selecione</option>
-    <option value="AC">Acre</option>
-    <option value="AL">Alagoas</option>
-    <option value="AP">Amapá</option>
-    <option value="AM">Amazonas</option>
-    <option value="BA">Bahia</option>
-    <option value="CE">Ceará</option>
-    <option value="DF">Distrito Federal</option>
-    <option value="ES">Espírito Santo</option>
-    <option value="GO">Goiás</option>
-    <option value="MA">Maranhão</option>
-    <option value="MT">Mato Grosso</option>
-    <option value="MS">Mato Grosso do Sul</option>
-    <option value="MG">Minas Gerais</option>
-    <option value="PA">Pará</option>
-    <option value="PB">Paraíba</option>
-    <option value="PR">Paraná</option>
-    <option value="PE">Pernambuco</option>
-    <option value="PI">Piauí</option>
-    <option value="RJ">Rio de Janeiro</option>
-    <option value="RN">Rio Grande do Norte</option>
-    <option value="RS">Rio Grande do Sul</option>
-    <option value="RO">Rondônia</option>
-    <option value="RR">Roraima</option>
-    <option value="SC">Santa Catarina</option>
-    <option value="SP">São Paulo</option>
-    <option value="SE">Sergipe</option>
-    <option value="TO">Tocantins</option>
-  </select> -->
-<!-- </div> -->
+<div class="container">
+  <h3>Detalhes do Pagamento</h3><br>
+  <div class="form-group row">
+    <div class="col-sm-3">
+      <label>À vista</label><br>
+      <input #vista type="text" id="vista">
+    </div>
+    <div class="col-sm-3">
+      <label>Banco</label><br>
+      <select #banco name="estados-brasil">
+        <option selected disabled value="">Selecione</option>
+        <option value="1">Banco do Brasil S.A.</option>
+        <option value="33">Banco Santander (Brasil) S.A.</option>
+        <option value="77">Banco Inter S.A.</option>
+        <option value="96">Banco B3 S.A.</option>
+        <option value="104">Caixa Econômica Federal</option>
+        <option value="237">Banco Bradesco S.A.</option>
+        <option value="260">Nu Pagamentos S.A (Nubank)</option>
+        <option value="341">Itaú Unibanco S.A.</option>
+        <option value="348">Banco Xp S/A</option>
+      </select>
+    </div>
+    <div class="col-sm-3">
+      <label>Entrada</label><br>
+      <input #entrada type="text" id="vista">
+    </div>
+    <div class="col-sm-3">
+      <label>Número de parcelas</label><br>
+      <input #parcelas type="text" id="parcelas">
+    </div>
+  </div>
+  <hr>
+</div>
 
 <div style="width: 125px;">
 
-  <input type="button" (click)="insereNovoCliente(
+  <input type="button" (click)="transacaoCompra(
     nome.value,
     cpf.value,
     data_nasc.value,
     rg.value,
     profissao.value,
     estado_civil.value,
-    rua_prop.value,
-    numero_prop.value,
-    andar_prop.value,
-    bloco_prop.value,
-    bairro_prop.value,
-    cep_prop.value,
-    cidade_prop.value,
-    uf_prop.value)" value="Comprar" routerLink="/listar-imoveis" id="botao-comprar">
+    rua_comprador.value,
+    numero_comprador.value,
+    andar_comprador.value,
+    bloco_comprador.value,
+    bairro_comprador.value,
+    cep_comprador.value,
+    cidade_comprador.value,
+    uf_comprador.value,
+    id_proprietario.value,
+    id_imovel.value,
+    vista.value,
+    banco.value,
+    entrada.value,
+    parcelas.value)" value="Comprar" routerLink="/novo-imovel" id="botao-comprar">
 </div>
 
-<br><br>
-
-
-
+<br><br> -->

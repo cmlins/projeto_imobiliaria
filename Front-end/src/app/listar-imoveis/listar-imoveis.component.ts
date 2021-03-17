@@ -13,6 +13,13 @@ export class ListarImoveisComponent implements OnInit {
   enderecos:any;
   tipos:any;
   gastos:any;
+  id_imovel:any;
+  id_proprietario:any;
+
+  pegarImovel(id_imovel: string, id_proprietario: string){
+    this.id_imovel = id_imovel;
+    this.id_proprietario = id_proprietario;
+  }
 
   constructor(private apiService: ApiService) { }
 
@@ -52,5 +59,7 @@ export class ListarImoveisComponent implements OnInit {
       this.gastos = data;
       console.log(data)
     });
-  }
+   }
+
 }
+

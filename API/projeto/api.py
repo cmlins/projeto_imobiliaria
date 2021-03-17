@@ -23,10 +23,10 @@ CORS(app)
 ########### ÁREAS DO SWAGGER ###########
 
 cliente = app_.namespace('Clientes', descrition='Cliente')
-transacoes = app_.namespace('Transacoes', descrition='Transacoes')
+transacao = app_.namespace('Transacao', descrition='transacao')
 imoveis = app_.namespace('Imoveis', descrition='Imoveis')
 pessoas = app_.namespace('Pessoas', descrition='Dados pessoais dos clientes')
-enderecos = app_.namespace('Endereços', descrition='Imoveis')
+enderecos = app_.namespace('Endereco', descrition='Imoveis')
 
 ########### CLASSES PARA A CRIAÇÃO DAS TABELAS ###########
 
@@ -209,7 +209,7 @@ model_imovel = app_.model('Imovel model', {
     'proprietario': fields.Nested(model_cliente)
 })
 
-model_transacoes = app_.model('Transacoes model', {
+model_transacoes = app_.model('transacao model', {
     'comprador': fields.Nested(model_cliente),
     'id_proprietario': fields.Integer(required=True, description='id_tipo', help='Preenchimento obrigatório'),
     'id_imovel': fields.Integer(required=True, description='id_tipo', help='Preenchimento obrigatório'),
@@ -236,6 +236,7 @@ class MainClass(Resource):
           
       return jsonify(output)
 
+    @app_.expect(model_pessoa)
     def post(self):
       res = request.get_json()
 
@@ -370,6 +371,7 @@ class MainClass(Resource):
           output.append(currEndereco)
       return jsonify(output)
 
+  @app_.expect(model_end)
   def post(self):
     res = request.get_json()
 
@@ -381,6 +383,8 @@ class MainClass(Resource):
     cep_cliente = res['cep']
     cidade_cliente = res['cidade']
     uf_cliente = res['uf']     
+
+    return jsonify(res)
     
 
 ########### ROTAS IMOVEL ###########
@@ -641,8 +645,9 @@ class MainClass(Resource):
 
 ########### ROTAS TRANSAÇÕES ###########
 
-@transacoes.route("/")
+@transacao.route("/")
 class MainClass(Resource):
+  
   @app_.expect(model_transacoes)
   def post(self):
     res = request.get_json()
@@ -713,7 +718,7 @@ class MainClass(Resource):
 
       return jsonify(output)
 
-@transacoes.route("/<int:id>")
+@transacao.route("/<int:id>")
 class MainClass(Resource):
   @app_.expect(model_transacoes)
   def put(self, id):
@@ -747,7 +752,7 @@ class MainClass(Resource):
       'id_imovel': transacao.id_imovel,
     }
 
-@transacoes.route("/pagamento")
+@transacao.route("/pagamento")
 class MainClass(Resource):
   @app_.expect(model_pagamento)
   def post(self):
@@ -777,7 +782,7 @@ class MainClass(Resource):
 
     return jsonify(output)
 
-@transacoes.route("/pagamento/<int:id>")
+@transacao.route("/pagamento/<int:id>")
 class MainClass(Resource):
   @app_.expect(model_pagamento)
   def delete(self, id):
@@ -807,7 +812,7 @@ class MainClass(Resource):
       'n_parcelas': pagamento.n_parcelas,
     }    
 
-@transacoes.route("/banco")
+@transacao.route("/banco")
 class MainClass(Resource):
   def get(self):
     bancos = Banco.query.all()
