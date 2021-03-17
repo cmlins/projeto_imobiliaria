@@ -1,36 +1,41 @@
 # projeto_imobiliaria
-Projeto relativo à conclusão do curso de Python do Campinas Tech Talents
+Projeto relativo à conclusão da trilha de Python da Enforce no programa Campinas Tech Talents
 
-1. Ativar o ambiente virtual
-.\Scripts\activate
+Para executar esse projeto, é necessário ter o Python, o NodeJS e PostgreSQL instalados
 
-2. Instalar as bibliotecas necessárias e dependências
-pip install -r requirements.txt
+### Inicializar o servidor
 
-# FrontEnd
+1. Entrar na pasta API
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.3.
+2. Ativar o ambiente virtual
 
-## Development server
+`.\Scripts\activate`
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+3. Instalar as bibliotecas necessárias e dependências
 
-## Code scaffolding
+`pip install -r requirements.txt`
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+4. Entrar na pasta projeto
 
-## Build
+6. Para criar as tabelas no banco de dados, em outro terminal, dentro da pasta projeto e com o ambiente env ativado, digite:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+>python
+>from api import db
+>db.create_all()
 
-## Running unit tests
+5. Para inicializar o servidor, na linha de comando:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+>set FLASK_APP=api.py
+>flask run
 
-## Running end-to-end tests
+### Inicializar o Front-end
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+1. Entrar na pasta Front-end
 
-## Further help
+2. Na primeira vez que for executar o código na máquina, no terminal, digite para instalar as dependências:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+`npm install`
+
+3. Após a instalação das depenências do projeto, ainda no terminal, digite:
+
+`ng serve --open`
