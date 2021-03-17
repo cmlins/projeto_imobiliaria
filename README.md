@@ -10,17 +10,11 @@ Para executar esse projeto, é necessário ter o Python, o NodeJS e PostgreSQL i
 
 1. Entrar na pasta API: `cd API`
 
-2. Para ativar o ambiente virtual, no terminal, digite:
+2. Para ativar o ambiente virtual, no terminal, digite: `.\Scripts\activate`
 
-`.\Scripts\activate`
+3. Instalar as bibliotecas necessárias e dependências, no terminal, digite: `pip install -r requirements.txt`
 
-3. Instalar as bibliotecas necessárias e dependências, no terminal, digite:
-
-`pip install -r requirements.txt`
-
-4. Entrar na pasta projeto
-
-`cd projeto`
+4. Entrar na pasta projeto: `cd projeto`
 
 6. Para criar as tabelas no banco de dados, em outro terminal, dentro da pasta projeto e com o ambiente env ativado, digite:
 
@@ -39,10 +33,6 @@ Para executar esse projeto, é necessário ter o Python, o NodeJS e PostgreSQL i
 
 1. Entrar na pasta Front-end
 
-2. Na primeira vez que for executar o código na máquina, no terminal, digite para instalar as dependências:
+2. Na primeira vez que for executar o código na máquina, no terminal, digite para instalar as dependências: `npm install`
 
-`npm install`
-
-3. Após a instalação das dependências do projeto, ainda no terminal, digite:
-
-`ng serve --open`
+3. Após a instalação das dependências do projeto, ainda no terminal, digite: `ng serve --open`
