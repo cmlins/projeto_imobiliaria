@@ -38,42 +38,45 @@ CREATE TABLE IF NOT EXISTS Gastos (
 	Propaganda NUMERIC(5,2)
 );
 
-CREATE TABLE IF NOT EXISTS Imovel (
-	Id_imovel SERIAL PRIMARY KEY,
-	Id_endereco INT,
-	Id_tipo INT,
-	FOREIGN KEY (Id_endereco) REFERENCES Endereco(Id_endereco),
-	FOREIGN KEY (Id_tipo) REFERENCES Tipo(Id_tipo)
-);
-
-CREATE TABLE IF NOT EXISTS Proprietario (
-	Id_proprietário  SERIAL PRIMARY KEY,
-	Id_pessoa INT,
-	Id_imovel INT,
-	id_gastos INT,	
-	Tempo_propriedade NUMERIC(5,2),
-	FOREIGN KEY (Id_pessoa) REFERENCES Pessoa(Id_pessoa),
-	FOREIGN KEY (Id_imovel) REFERENCES Imovel(Id_imovel),
-	FOREIGN KEY (id_gastos) REFERENCES Gastos_previos(id_gastos)
-);
-
 CREATE TABLE IF NOT EXISTS Pagamento (
 	Id_pagamento SERIAL PRIMARY KEY,
 	Vista BOOLEAN,
 	Id_banco INT,
 	Entrada NUMERIC(5,2),
 	N_parcelas INT,
-	FOREIGN KEY (Id_banco) REFERENCES Bancos(Id_banco)	
+	FOREIGN KEY (Id_banco) REFERENCES Banco(Id_banco)	
 );
 
 CREATE TABLE IF NOT EXISTS Cliente (
 	Id_cliente SERIAL PRIMARY KEY,
 	Id_pessoa INT,
-	Id_endereco INT,
-	Id_pagamento INT,	
+	Id_endereco INT,	
 	FOREIGN KEY (Id_endereco) REFERENCES Endereco(Id_endereco),
-	FOREIGN KEY (Id_pessoa) REFERENCES Pessoa(Id_pessoa),
-	FOREIGN KEY (Id_pagamento) REFERENCES Pagamento(Id_pagamento),
+	FOREIGN KEY (Id_pessoa) REFERENCES Pessoa(Id_pessoa)	
 );
 
+CREATE TABLE IF NOT EXISTS Imovel (
+	Id_imovel SERIAL PRIMARY KEY,
+	Id_endereco INT,
+	Id_tipo INT,
+	Id_gastos INT,
+	Idade INT,
+	Id_cliente INT,
+	FOREIGN KEY (Id_endereco) REFERENCES Endereco(Id_endereco),
+	FOREIGN KEY (Id_tipo) REFERENCES Tipo(Id_tipo),
+	FOREIGN KEY (Id_gastos) REFERENCES Gastos(Id_gastos),
+	FOREIGN KEY (Id_cliente) REFERENCES Cliente(Id_cliente)
+);
+
+CREATE TABLE IF NOT EXISTS Transacao (
+	Id_transacao SERIAL PRIMARY KEY,
+	Id_imovel INT,
+	Id_comprador INT,
+	Id_proprietario INT,	
+	Id_pagamento INT,
+	FOREIGN KEY (Id_imovel) REFERENCES Imovel(Id_imovel),
+	FOREIGN KEY (Id_comprador) REFERENCES Cliente(Id_cliente),
+	FOREIGN KEY (Id_proprietario) REFERENCES Cliente(Id_cliente),
+	FOREIGN KEY (Id_pagamento) REFERENCES Pagamento(Id_pagamento)
+);
 
