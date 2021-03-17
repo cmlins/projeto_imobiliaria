@@ -210,7 +210,7 @@ model_imovel = app_.model('Imovel model', {
 })
 
 model_transacoes = app_.model('Transacoes model', {
-    'id_comprador': fields.Integer(required=True, description='id_tipo', help='Preenchimento obrigatório'),
+    'comprador': fields.Nested(model_cliente),
     'id_proprietario': fields.Integer(required=True, description='id_tipo', help='Preenchimento obrigatório'),
     'id_imovel': fields.Integer(required=True, description='id_tipo', help='Preenchimento obrigatório'),
     'pagamento': fields.Nested(model_pagamento)
@@ -647,7 +647,23 @@ class MainClass(Resource):
   def post(self):
     res = request.get_json()
     print(res)
-    comprador = res['id_comprador']
+    # comprador
+    nome = res['comprador']['pessoa']['nome']
+    cpf = res['comprador']['pessoa']['cpf']
+    data_nasc = res['comprador']['pessoa']['data_nasc']
+    rg = res['comprador']['pessoa']['rg']
+    profissao = res['comprador']['pessoa']['profissao']
+    estado_civil = res['comprador']['pessoa']['estado_civil']
+
+    rua_cliente = res['comprador']['endereco']['rua']
+    numero_cliente = res['comprador']['endereco']['numero']
+    andar_cliente = res['comprador']['endereco']['andar']
+    bloco_cliente = res['comprador']['endereco']['bloco']
+    bairro_cliente = res['comprador']['endereco']['bairro']
+    cep_cliente = res['comprador']['endereco']['cep']
+    cidade_cliente = res['comprador']['endereco']['cidade']
+    uf_cliente = res['comprador']['endereco']['uf']
+
     proprietario = res['id_proprietario']
     imovel = res['id_imovel']
 
@@ -656,11 +672,26 @@ class MainClass(Resource):
     entrada = res['pagamento']['entrada']
     n_parcelas = res['pagamento']['n_parcelas']
 
+    print(f'nome do comprador: {nome}')
+      
+
+    pessoa = Pessoa(nome, cpf, data_nasc, rg, profissao, estado_civil)
+    db.session.add(pessoa)        
+    db.session.commit()
+
+    endereco_cliente = Endereco(rua_cliente, numero_cliente, andar_cliente, bloco_cliente, bairro_cliente, cep_cliente, cidade_cliente, uf_cliente)
+    db.session.add(endereco_cliente)        
+    db.session.commit()        
+
+    comprador = Cliente(pessoa.id_pessoa, endereco_cliente.id_endereco)
+    db.session.add(comprador)        
+    db.session.commit()
+
     pagamento = Pagamento(a_vista, id_banco, entrada, n_parcelas)
     db.session.add(pagamento)
     db.session.commit()
 
-    transacao = Transacao(imovel, comprador, proprietario, pagamento.id_pagamento)
+    transacao = Transacao(imovel, comprador.id_cliente, proprietario, pagamento.id_pagamento)
     db.session.add(transacao)
     db.session.commit()
 
