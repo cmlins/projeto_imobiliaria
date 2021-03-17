@@ -1,27 +1,98 @@
 <div  class="imoveis">
-  <h2>Endereço</h2>
+  <br><h2>Imóveis disponíveis</h2><br>
   <table >
     <thead>
+      <th>#</th>
       <th>Rua</th>
       <th>Número</th>
       <th>Bloco</th>
       <th>Andar</th>
+      <th>Bairro</th>
       <th>Cidade</th>
       <th>UF</th>
       <th>CEP</th>
-      <th>Idade da construção</th>
+      <th>Idade</th>
       <th>Tipo</th>
+      <th>Comprar</th>
+      <th>Proprietário(a)</th>
     </thead>
+    <div>
+
+    </div>
     <tr *ngFor="let imovel of imoveis; index as i">
-      <td>{{enderecos[i].rua}}</td>
-      <td>{{enderecos[i].numero}}</td>
-      <td>{{enderecos[i].bloco}}</td>
-      <td>{{enderecos[i].andar}}</td>
-      <td>{{enderecos[i].cidade}}</td>
-      <td>{{enderecos[i].uf}}</td>
-      <td>{{enderecos[i].cep}}</td>
+      <td>{{i}}</td>
+      <td>
+        <div *ngFor="let endereco of enderecos">
+          <div *ngIf="imovel.id_endereco == endereco.id_endereco">
+            {{endereco.rua}}
+          </div>
+        </div>
+      </td>
+      <td>
+        <div *ngFor="let endereco of enderecos">
+          <div *ngIf="imovel.id_endereco == endereco.id_endereco">
+            {{endereco.numero}}
+          </div>
+        </div>
+      </td>
+      <td>
+        <div *ngFor="let endereco of enderecos">
+          <div *ngIf="imovel.id_endereco == endereco.id_endereco">
+            {{endereco.bloco}}
+          </div>
+        </div>
+      </td>
+      <td>
+        <div *ngFor="let endereco of enderecos">
+          <div *ngIf="imovel.id_endereco == endereco.id_endereco">
+            {{endereco.andar}}
+          </div>
+        </div>
+      </td>
+      <td>
+        <div *ngFor="let endereco of enderecos">
+          <div *ngIf="imovel.id_endereco == endereco.id_endereco">
+            {{endereco.bairro}}
+          </div>
+        </div>
+      </td>
+      <td>
+        <div *ngFor="let endereco of enderecos">
+          <div *ngIf="imovel.id_endereco == endereco.id_endereco">
+            {{endereco.cidade}}
+          </div>
+        </div>
+      </td>
+      <td>
+        <div *ngFor="let endereco of enderecos">
+          <div *ngIf="imovel.id_endereco == endereco.id_endereco">
+            {{endereco.uf}}
+          </div>
+        </div>
+      </td>
+      <td>
+        <div *ngFor="let endereco of enderecos">
+          <div *ngIf="imovel.id_endereco == endereco.id_endereco">
+            {{endereco.cep}}
+          </div>
+        </div>
+      </td>
       <td>{{imovel.idade}}</td>
       <td>{{tipos[i].tipo}}</td>
+      <td>
+        <button type="button">Comprar</button>
+      </td>
+      <td>
+        <div *ngFor="let cliente of clientes">
+          <div *ngIf="cliente.id_cliente == imovel.id_cliente">
+            <div *ngFor="let pessoa of pessoas">
+              <div *ngIf="cliente.id_pessoa == pessoa.id_pessoa">
+                {{pessoa.nome}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
     </tr>
   </table>
 </div>
