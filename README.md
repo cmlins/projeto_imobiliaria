@@ -1,4 +1,5 @@
-# projeto_imobiliaria
+# PROJETO IMOBILIÁRIA
+
 Projeto relativo à conclusão da trilha de Python da Enforce no programa Campinas Tech Talents
 
 Para executar esse projeto, é necessário ter o Python, o NodeJS e PostgreSQL instalados
@@ -19,14 +20,14 @@ Para executar esse projeto, é necessário ter o Python, o NodeJS e PostgreSQL i
 
 6. Para criar as tabelas no banco de dados, em outro terminal, dentro da pasta projeto e com o ambiente env ativado, digite:
 
->python
->from api import db
->db.create_all()
+>python  
+>from api import db  
+>db.create_all()  
 
 5. Para inicializar o servidor, na linha de comando:
 
->set FLASK_APP=api.py
->flask run
+>set FLASK_APP=api.py  
+>flask run  
 
 ### Inicializar o Front-end
 
