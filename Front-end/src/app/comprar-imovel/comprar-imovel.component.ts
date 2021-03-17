@@ -7,7 +7,8 @@ import { ApiService } from '../../services/api-service.service';
   styleUrls: ['./comprar-imovel.component.scss']
 })
 export class ComprarImovelComponent implements OnInit {
-
+  id_imovel:any;
+  id_proprietario:any;
   imoveis:any;
   constructor(private apiService: ApiService) { }
 

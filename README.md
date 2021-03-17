@@ -29,6 +29,8 @@ Para executar esse projeto, é necessário ter o Python, o NodeJS e PostgreSQL i
 >set FLASK_APP=api.py  
 >flask run  
 
+6. É preciso executar o script para popular as tabelas de domínio. O script está na pasta Banco_de_dados deste projeto
+
 ### Inicializar o Front-end
 
 1. Entrar na pasta Front-end
