@@ -1,36 +1,42 @@
-# projeto_imobiliaria
-Projeto relativo à conclusão do curso de Python do Campinas Tech Talents
+# PROJETO IMOBILIÁRIA
 
-1. Ativar o ambiente virtual
-.\Scripts\activate
+Projeto relativo à conclusão da trilha de Python da Enforce no programa Campinas Tech Talents
 
-2. Instalar as bibliotecas necessárias e dependências
-pip install -r requirements.txt
+Para executar esse projeto, é necessário ter o Python, o NodeJS e PostgreSQL instalados
 
-# FrontEnd
+### Inicializar o servidor
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.3.
+1. Entrar na pasta API
 
-## Development server
+2. Ativar o ambiente virtual
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+`.\Scripts\activate`
 
-## Code scaffolding
+3. Instalar as bibliotecas necessárias e dependências
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+`pip install -r requirements.txt`
 
-## Build
+4. Entrar na pasta projeto
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+6. Para criar as tabelas no banco de dados, em outro terminal, dentro da pasta projeto e com o ambiente env ativado, digite:
 
-## Running unit tests
+>python  
+>from api import db  
+>db.create_all()  
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+5. Para inicializar o servidor, na linha de comando:
 
-## Running end-to-end tests
+>set FLASK_APP=api.py  
+>flask run  
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+### Inicializar o Front-end
 
-## Further help
+1. Entrar na pasta Front-end
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+2. Na primeira vez que for executar o código na máquina, no terminal, digite para instalar as dependências:
+
+`npm install`
+
+3. Após a instalação das depenências do projeto, ainda no terminal, digite:
+
+`ng serve --open`
