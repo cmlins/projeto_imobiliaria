@@ -8,9 +8,15 @@ import { ApiService } from '../../services/api-service.service';
 })
 export class ComprarImovelComponent implements OnInit {
 
+  imoveis:any;
   constructor(private apiService: ApiService) { }
 
-  ngOnInit(): void {}
+  ngOnInit() {
+    this.apiService.getImoveis().subscribe((data)=>{
+      // console.log(data);
+      this.imoveis = data;
+    });
+  }
 
   insereNovoCliente
     (

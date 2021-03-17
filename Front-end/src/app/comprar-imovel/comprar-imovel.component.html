@@ -1,8 +1,124 @@
 <br><br>
 <h2>Comprar Imóvel</h2>
+<br><br>
+<h3>Dados do comprador</h3>
+<hr>
+<div class="container">
+  <div class="form-group row">
+    <div class="col-sm-12">
+      <label>Nome</label><br>
+      <input #nome type="text" id="nome">
+    </div>
+  </div>
 
-<div>
-  <br>
+  <div class="form-group row">
+    <div class="col-sm-4">
+      <label>CPF</label><br>
+      <input #cpf type="text" id="cpf">
+    </div>
+    <div class="col-sm-4">
+      <label>Data Nascimento</label><br>
+      <input #data_nasc type="text" id="data_nasc">
+    </div>
+    <div class="col-sm-4">
+      <label>RG</label><br>
+    <input #rg type="text" id="rg">
+  </div>
+
+  <div class="form-group row">
+    <div class="col-sm-6">
+      <br><label>Profissão</label><br>
+      <input #profissao type="text" id="profissao">
+    </div>
+    <div class="col-sm-6">
+      <br><label>Estado Civil</label><br>
+      <select #estado_civil name="estado_civil" id="estado-civil">
+        <option selected disabled value="">Selecione</option>
+        <option value="solteiro">Solteiro(a)</option>
+        <option value="casado">Casado(a)</option>
+        <option value="separado">Separado(a)</option>
+        <option value="divorciado">Divorciado(a)</option>
+        <option value="viuvo">Viúvo(a)</option>
+        <option value="amasiado">Amasiado(a)</option>
+      </select>
+  </div>
+</div>
+<div class="container">
+  <hr>
+  <div class="form-group row">
+    <div class="col-sm-9">
+      <label>Rua</label><br>
+      <input #rua_prop type="text" id="rua_prop">
+    </div>
+    <div class="col-sm-3">
+      <label>Número</label><br>
+      <input #numero_prop type="text" id="numero_prop">
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-sm-3">
+      <label>Andar</label><br>
+      <input #andar_prop type="text" id="andar_prop">
+    </div>
+    <div class="col-sm-3">
+      <label>Bloco</label><br>
+      <input #bloco_prop type="text" id="bloco_prop">
+    </div>
+    <div class="col-sm-3">
+      <label>Bairro</label><br>
+  <input #bairro_prop type="text" id="bairro_prop">
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-sm-3">
+      <label>CEP</label><br>
+      <input #cep_prop type="text" id="cep_prop">
+    </div>
+    <div class="col-sm-3">
+      <label>Cidade</label><br>
+      <input #cidade_prop type="text" id="cidade_prop">
+    </div>
+    <div class="col-sm-3">
+      <label>UF</label><br>
+      <select #uf_prop name="estados-brasil">
+        <option selected disabled value="">Selecione</option>
+        <option value="AC">Acre</option>
+        <option value="AL">Alagoas</option>
+        <option value="AP">Amapá</option>
+        <option value="AM">Amazonas</option>
+        <option value="BA">Bahia</option>
+        <option value="CE">Ceará</option>
+        <option value="DF">Distrito Federal</option>
+        <option value="ES">Espírito Santo</option>
+        <option value="GO">Goiás</option>
+        <option value="MA">Maranhão</option>
+        <option value="MT">Mato Grosso</option>
+        <option value="MS">Mato Grosso do Sul</option>
+        <option value="MG">Minas Gerais</option>
+        <option value="PA">Pará</option>
+        <option value="PB">Paraíba</option>
+        <option value="PR">Paraná</option>
+        <option value="PE">Pernambuco</option>
+        <option value="PI">Piauí</option>
+        <option value="RJ">Rio de Janeiro</option>
+        <option value="RN">Rio Grande do Norte</option>
+        <option value="RS">Rio Grande do Sul</option>
+        <option value="RO">Rondônia</option>
+        <option value="RR">Roraima</option>
+        <option value="SC">Santa Catarina</option>
+        <option value="SP">São Paulo</option>
+        <option value="SE">Sergipe</option>
+        <option value="TO">Tocantins</option>
+      </select>
+    </div>
+  </div>
+  <hr>
+</div>
+
+<!-- <div class="container"> -->
+  <!-- <br>
   <h3>Dados do proprietário</h3>
   <label>Nome</label>
   <input #nome type="text" id="nome"> <br><br>
@@ -23,10 +139,11 @@
     <option value="divorciado">Divorciado(a)</option>
     <option value="viuvo">Viúvo(a)</option>
     <option value="amasiado">Amasiado(a)</option>
-  </select>
-  <hr>
+  </select> -->
+<!--
+
   <label>Rua</label>
-  <input #rua_prop type="text" id="rua_prop"> <br><br>
+  <input #rua_prop type="text" id="rua_prop"> <br>
   <label>Número</label>
   <input #numero_prop type="text" id="numero_prop"> <br><br>
   <label>Andar</label>
@@ -69,10 +186,11 @@
     <option value="SP">São Paulo</option>
     <option value="SE">Sergipe</option>
     <option value="TO">Tocantins</option>
-  </select>
-</div>
+  </select> -->
+<!-- </div> -->
 
 <div style="width: 125px;">
+
   <input type="button" (click)="insereNovoCliente(
     nome.value,
     cpf.value,
@@ -87,7 +205,7 @@
     bairro_prop.value,
     cep_prop.value,
     cidade_prop.value,
-    uf_prop.value)" value="Inserir" routerLink="/listar-imoveis">
+    uf_prop.value)" value="Comprar" routerLink="/listar-imoveis" id="botao-comprar">
 </div>
 
 <br><br>
