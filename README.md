@@ -2,7 +2,17 @@
 
 Projeto relativo à conclusão da trilha de Python da Enforce no programa Campinas Tech Talents
 
-Para executar esse projeto, é necessário ter o Python, o NodeJS e PostgreSQL instalados
+Foram usados, neste projeto:
+##### Front-end:
+* [Angular](https://angular.io/)
+
+##### Back-end:
+* [Postgres](https://www.postgresql.org/)
+* [SQLAlchemy](https://www.sqlalchemy.org/)
+* [Flask](https://flask.palletsprojects.com/en/1.1.x/)
+
+
+Para executar esse projeto, é necessário ter o Python, o NodeJS e PostgreSQL instalados.
 
 ### Inicializar o servidor
 
