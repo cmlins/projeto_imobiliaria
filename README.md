@@ -16,18 +16,18 @@ Para executar esse projeto, é necessário ter o Python, o NodeJS e PostgreSQL i
 
 4. Entrar na pasta projeto: `cd projeto`
 
-6. Para criar as tabelas no banco de dados, em outro terminal, dentro da pasta projeto e com o ambiente env ativado, digite:
+5. Para criar as tabelas no banco de dados, em outro terminal, dentro da pasta projeto e com o ambiente env ativado, digite:
 
 >python  
 >from api import db  
 >db.create_all()  
 
-5. Para inicializar o servidor, na linha de comando:
+6. É preciso executar o script para popular as tabelas de domínio. O script `InsertTabelasDominio.sql` está na pasta Banco_de_dados deste projeto.
+
+7. Para inicializar o servidor, na linha de comando:
 
 >set FLASK_APP=api.py  
 >flask run  
-
-6. É preciso executar o script para popular as tabelas de domínio. O script `InsertTabelasDominio.sql` está na pasta Banco_de_dados deste projeto.
 
 ### Inicializar o Front-end
 
