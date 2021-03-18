@@ -16,7 +16,7 @@ Para executar esse projeto, é necessário ter o Python, o NodeJS e PostgreSQL i
 
 ### Inicializar o servidor
 
-0. No PostgreSQL, criar o database Imobliaria usando o script `createDatabase.sql` presente na pasta Banco de dados;
+0. No PostgreSQL, criar o database Imobiliaria usando o script `createDatabase.sql` presente na pasta Banco de dados;
 
 1. Entrar na pasta API: `cd API`
 
